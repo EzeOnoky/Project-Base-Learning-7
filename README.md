@@ -49,3 +49,62 @@ On the example of AWS services understand the difference between Block Storage, 
 
 It is important to know what storage solution is suitable for what use cases, for this – you need to answer following questions: what data will be stored, in what format, how this data will be accessed, by whom, from where, how frequently, etc. Base on this you will be able to choose the right storage system for your solution.
 
+### STEP 1 – ***PREPARE NFS SERVER***
+
+1. - I Spinned up a new EC2 instance with RHEL Linux 8 Operating System.
+For Rhel 8 server use this ami RHEL-8.6.0_HVM-20220503-x86_64-2-Hourly2-GP2 (ami-035c5dc086849b5de)
+
+2. - Based on my LVM experience from **Project 6**, I Configured 3 LVM on the Server.
+
+```
+sudo yum install lvm2
+sudo lvmdiskscan
+sudo pvcreate /dev/xvdf1 /dev/xvdg1 /dev/xvdh1
+sudo vgcreate db-vg /dev/xvdh1 /dev/xvdg1 /dev/xvdf1
+sudo pvs
+```
+
+```
+sudo vgcreate webdata-vg /dev/xvdh1 /dev/xvdg1 /dev/xvdf1
+sudo vgs
+```
+
+```
+sudo lvcreate -n lv-apps -L 9G webdata-vg
+sudo lvcreate -n lv-logs -L 9G webdata-vg
+sudo lvcreate -n lv-opt -L 9G webdata-vg
+sudo lvs
+```
+
+- Instead of formating the disks as ***ext4*** I formatted them as ***xfs***
+
+```
+sudo mkfs -t xfs /dev/webdata-vg/lv-apps
+sudo mkfs -t xfs /dev/webdata-vg/lv-logs
+sudo mkfs -t xfs /dev/webdata-vg/lv-opt
+```
+
+3. - I ensured there are 3 **Logical Volumes**. ***lv-opt lv-apps, and lv-logs***
+
+I created mount points on **/mnt** directory for the logical volumes as follow:
+- Mount **lv-apps** on **/mnt/apps** – To be used by webservers
+- Mount **lv-logs** on **/mnt/logs** – To be used by webserver logs
+- Mount **lv-opt** on **/mnt/opt** – To be used by Jenkins server in *Project 8*
+
+```
+sudo mkdir -p /mnt/apps
+sudo mkdir -p /mnt/logs
+sudo mkdir -p /mnt/opt
+```
+
+4. - I installed NFS server, configured it to start on reboot and make sure it is up and running
+
+```
+sudo yum -y update
+sudo yum install nfs-utils -y
+sudo systemctl start nfs-server.service
+sudo systemctl enable nfs-server.service
+sudo systemctl status nfs-server.service
+```
+
+
