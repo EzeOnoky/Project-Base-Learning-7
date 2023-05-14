@@ -123,14 +123,17 @@ To check the ***subnet cidr*** – I opened my EC2 details in AWS web console an
 - I make sure I set up permission that will allow the Web servers to read, write and execute files on NFS:
 
 ```
+Change ownership of the directory
 sudo chown -R nobody: /mnt/apps
 sudo chown -R nobody: /mnt/logs
 sudo chown -R nobody: /mnt/opt
 
+Allow read, write , Execute access on these directories
 sudo chmod -R 777 /mnt/apps
 sudo chmod -R 777 /mnt/logs
 sudo chmod -R 777 /mnt/opt
 
+Restart the NFS Server
 sudo systemctl restart nfs-server.service
 ```
 
@@ -144,13 +147,14 @@ Script
 /mnt/logs <Subnet-CIDR>(rw,sync,no_all_squash,no_root_squash)
 /mnt/opt <Subnet-CIDR>(rw,sync,no_all_squash,no_root_squash)
 
-Script modified
+Script modified & Executed
 /mnt/apps 172.31.16.0/20(rw,sync,no_all_squash,no_root_squash)
 /mnt/logs 172.31.16.0/20(rw,sync,no_all_squash,no_root_squash)
 /mnt/opt 172.31.16.0/20(rw,sync,no_all_squash,no_root_squash)
 
 Esc + :wq!
 
+Export modified file, so that the web servers will be able to access it
 sudo exportfs -arv
 ```
 
@@ -158,13 +162,24 @@ sudo exportfs -arv
 
 - `rpcinfo -p | grep nfs` The port is **2049**
 
+![7_4](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/d6b7520d-0a72-4c9b-927f-51608d55f0e9)
+
 ### STEP 2 — ***CONFIGURE THE DATABASE SERVER***
 
-1. - I installed MySQL server on the RED HART OS
+1. - I installed MySQL server on the Ubuntu OS
 
 ```
+USED for installing MYSQL on a Ubuntu OS, Always run APT update 1st
+sudo apt update
+sudo apt install mysql-server -y
+sudo systemctl restart mysqld
+sudo systemctl enable mysqld
+```
+
+```
+USED for installing MYSQL on a RedHart OS, Always run YUM update 1st
 sudo yum update
-sudo yum install mysql-server
+sudo yum install mysql-server -y
 sudo systemctl restart mysqld
 sudo systemctl enable mysqld
 ```
@@ -184,6 +199,8 @@ FLUSH PRIVILEGES;
 SHOW DATABASES;
 exit;
 ```
+![7_5](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/2cd6341a-05be-46a6-8446-c7ab3bd3c1c9)
+
 
 ### Step 3 — ***PREPARE THE WEB SERVER***
 
@@ -191,6 +208,8 @@ exit;
 Knowing that one DB can be accessed for **reads** and **writes** by multiple clients. For storing shared files that the Web Servers will use – I utilized NFS and mount previously created Logical Volume **lv-apps** to the folder where Apache stores files to be served to the users **(/var/www)**.
 
 - This approach will make the Web Servers **stateless**, which means I will be able to add new ones or remove them whenever I need, and the integrity of the data (in the database and on NFS) will be preserved.
+
+So basically, i seek to mount on my web server, all the logical volumes which i have created previously on the NFS server
 
 - During the next steps I did the following:
 
@@ -202,24 +221,39 @@ Knowing that one DB can be accessed for **reads** and **writes** by multiple cli
 
 1. - I launched a new EC2 instance with RHEL 8 Operating System
 
-2. - I installed NFS client using `sudo yum install nfs-utils nfs4-acl-tools -y`
+2. - I installed NFS client using below command, note - without this installation, i will not be able to access the NFS Server from the web server
+
+```
+sudo yum install nfs-utils nfs4-acl-tools -y
+```
 
 3. - I mounted **/var/www/** and target the NFS server’s export for apps
 
 ```
 sudo mkdir /var/www
+
+Script
 sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/apps /var/www
+
+Executed Script
 sudo mount -t nfs -o rw,nosuid 172.31.23.140:/mnt/apps /var/www
 ```
 
-4. - I verified that NFS was mounted successfully by running `df -h`. I ensured that the changes will persist on Web Server after reboot:
+![7_6](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/ac9e8e97-848b-4a12-83d9-2a2c6315e19d)
+
+4. - I verified that NFS was mounted successfully by running `df -h` , i also tested by creating a file on the web server and tried viewing the file on the NFS. I ensured that the changes will persist on Web Server after reboot:
 
 - `sudo vi /etc/fstab`
 
 - I added the following line inside the file
 
-- `<NFS-Server-Private-IP-Address>:/mnt/apps /var/www nfs defaults 0 0`
-- 172.31.23.140:/mnt/apps /var/www nfs defaults 0 0
+```
+Script
+`<NFS-Server-Private-IP-Address>:/mnt/apps /var/www nfs defaults 0 0`
+
+Executed Script
+172.31.23.140:/mnt/apps /var/www nfs defaults 0 0
+```
 
 5. - I installed [Remi’s repository](http://www.servermom.org/how-to-enable-remi-repo-on-centos-7-6-and-5/2790/), Apache and PHP, without the Apache you cant server content content to your users
 
