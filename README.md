@@ -239,13 +239,11 @@ Executed Script
 sudo mount -t nfs -o rw,nosuid 172.31.23.140:/mnt/apps /var/www
 ```
 
-![7_6](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/ac9e8e97-848b-4a12-83d9-2a2c6315e19d)
-
-4. - I verified that NFS was mounted successfully by running `df -h` , i also tested by creating a file on the web server and tried viewing the file on the NFS. I ensured that the changes will persist on Web Server after reboot:
+4. - I verified that NFS was mounted successfully by running `df -h`. I ensured that the changes will persist on Web Server after reboot:
 
 - `sudo vi /etc/fstab`
 
-- I added the following line inside the file
+- I added the following line inside the file in the fstab
 
 ```
 Script
@@ -255,7 +253,7 @@ Executed Script
 172.31.23.140:/mnt/apps /var/www nfs defaults 0 0
 ```
 
-5. - I installed [Remi’s repository](http://www.servermom.org/how-to-enable-remi-repo-on-centos-7-6-and-5/2790/), Apache and PHP, without the Apache you cant server content content to your users
+5. - I installed  Apache and PHP, Remi's Repository  [Remi’s repository](http://www.servermom.org/how-to-enable-remi-repo-on-centos-7-6-and-5/2790/). Without the Apache you cant server content to your users, Nginx, Apache etc are the popular web servers clients out there.
 
 ```
 sudo yum install httpd -y
@@ -281,19 +279,46 @@ sudo setsebool -P httpd_execmem 1
 
 6. - I verified that Apache files and directories are available on the Web Server in **/var/www** and also on the NFS server in **/mnt/apps**. Seeing the same files – it means NFS is mounted correctly. I created a new file **touch test.txt** from one server and checked if the same file is accessible from other Web Servers.
 
-7. - I located the log folder for Apache on the Web Server and mounted it to NFS server’s export for logs. I repeated step **No 4** to make sure the mount point will persist after reboot.
+![7_6](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/ac9e8e97-848b-4a12-83d9-2a2c6315e19d)
 
+7. - I located the log folder for Apache on the Web Server and mounted it to NFS server’s export for logs. I repeated step **No 4** to make sure the mount point will persist after reboot. Log folder for Apache is in this path /var/log/httpd
+
+```
+ls /var/logs  - you will see httpd, this is the log folder for Apache, it shld be empty, check with below
+sudo ls /var/logs/httpd
+
+Script
+sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/log/httpd
+ 
+ Executed
+ sudo mount -t nfs -o rw,nosuid 172.31.23.140:/mnt/logs /var/log/httpd
+ 
+sudo ls /var/logs/httpd    confirm the mounting was successful
+ 
+I updated the fstab with below line
+
+sudo vi /etc/fstab
 172.31.23.140:/mnt/logs /var/log/httpd nfs defaults 0 0
+```
 
 8. - I forked the tooling source code from [Darey.io Github Account](https://github.com/darey-io/tooling) to my Github account. (Learn how to fork a repo [here](https://www.youtube.com/watch?v=f5grYMXbAV0))
 
-Esure git is installed on your web server instance
+```
+I first ensured git is installed on my web server and also initialized, Then proceeded to run git clone. I also confirmed the download was successfull
 sudo yum install git -y
-
-Run below to confirm the git was successfully downloaded
+git init
+git clone https://github.com/darey-io/tooling.git
 ls
+```
+
 
 9. - I deployed the tooling website’s code to the Webserver. i ensured that the html folder from the repository is deployed to **/var/www/html**
+
+```
+cd tooling
+ls /var/www    confirm there is a html folder here
+sudo cp -R html/. /var/www/html   Run this while on tooling directory, the target is to copy ALL the content of html(inside the dowloaded repo - toolin
+
 
 - **Note 1**: I opened the TCP port 80 on the Web Server.
 
