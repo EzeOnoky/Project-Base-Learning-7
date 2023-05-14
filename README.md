@@ -76,7 +76,7 @@ sudo lvcreate -n lv-opt -L 9G webdata-vg
 sudo lvs
 ```
 
-- Instead of formating the disks as ***ext4*** I formatted them as ***xfs***
+- Instead of formating the disks as ***ext4***,  I formatted the disk as ***xfs***
 
 ```
 sudo mkfs -t xfs /dev/webdata-vg/lv-apps
@@ -103,7 +103,7 @@ sudo mount /dev/webdata-vg/lv-logs /mnt/logs
 sudo mount /dev/webdata-vg/lv-opt /mnt/opt
 ```
 
-4. - I installed NFS server, configured it to start on reboot and make sure it is up and running
+4. - I installed NFS server, configured it to start on reboot and made sure it is up and running
 
 ```
 sudo yum -y update
@@ -117,6 +117,8 @@ sudo systemctl status nfs-server.service
 5. -I exported the mounts for webservers’ ***subnet cidr*** to connect as clients. For simplicity, I installed all the three Web Servers inside the same subnet, but in production set up I would probably want to separate each tier inside its own subnet for higher level of security.
 
 To check the ***subnet cidr*** – I opened my EC2 details in AWS web console and located ‘Networking’ tab and opened a Subnet link:
+
+![7_3](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/bfa7b0f0-43b6-42e0-8194-59eaff2a3ac4)
 
 - I make sure I set up permission that will allow the Web servers to read, write and execute files on NFS:
 
@@ -132,14 +134,20 @@ sudo chmod -R 777 /mnt/opt
 sudo systemctl restart nfs-server.service
 ```
 
-i Configured access to NFS for clients within the same subnet (example of Subnet CIDR – 172.31.32.0/20 ):
+I Configured access to NFS for clients within the same subnet (example of Subnet CIDR – 172.31.32.0/20 ):
 
 ```
 sudo vi /etc/exports
 
+Script
 /mnt/apps <Subnet-CIDR>(rw,sync,no_all_squash,no_root_squash)
 /mnt/logs <Subnet-CIDR>(rw,sync,no_all_squash,no_root_squash)
 /mnt/opt <Subnet-CIDR>(rw,sync,no_all_squash,no_root_squash)
+
+Script modified
+/mnt/apps 172.31.16.0/20(rw,sync,no_all_squash,no_root_squash)
+/mnt/logs 172.31.16.0/20(rw,sync,no_all_squash,no_root_squash)
+/mnt/opt 172.31.16.0/20(rw,sync,no_all_squash,no_root_squash)
 
 Esc + :wq!
 
