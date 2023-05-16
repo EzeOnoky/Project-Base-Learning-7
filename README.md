@@ -219,7 +219,7 @@ So basically, i seek to mount on my web server, all the logical volumes which i 
 
  - Configured the Web Servers to work with a single MySQL database
 
-1. - I launched a new EC2 instance with RHEL 8 Operating System
+# 1 # . - I launched a new EC2 instance with RHEL 8 Operating System
 
 2. - I installed NFS client using below command, note - without this installation, i will not be able to access the NFS Server from the web server
 
@@ -227,7 +227,7 @@ So basically, i seek to mount on my web server, all the logical volumes which i 
 sudo yum install nfs-utils nfs4-acl-tools -y
 ```
 
-3. - I mounted **/var/www/** and target the NFS server’s export for apps
+# 3 #. - I mounted **/var/www/** and target the NFS server’s export for apps
 
 ```
 sudo mkdir /var/www
@@ -239,7 +239,7 @@ Executed Script
 sudo mount -t nfs -o rw,nosuid 172.31.23.140:/mnt/apps /var/www
 ```
 
-4. - I verified that NFS was mounted successfully by running `df -h`. I ensured that the changes will persist on Web Server after reboot:
+# 4 #. - I verified that NFS was mounted successfully by running `df -h`. I ensured that the changes will persist on Web Server after reboot:
 
 - `sudo vi /etc/fstab`
 
@@ -253,7 +253,8 @@ Executed Script
 172.31.23.140:/mnt/apps /var/www nfs defaults 0 0
 ```
 
-5. - I installed  Apache and PHP, Remi's Repository  [Remi’s repository](http://www.servermom.org/how-to-enable-remi-repo-on-centos-7-6-and-5/2790/). Without the Apache you cant server content to your users, Nginx, Apache etc are the popular web servers clients out there.
+# 5 # - I installed  Apache and PHP,
+Remi's Repository  [Remi’s repository](http://www.servermom.org/how-to-enable-remi-repo-on-centos-7-6-and-5/2790/). Without the Apache you cant server content to your users, Nginx, Apache etc are the popular web servers clients out there.
 
 ```
 sudo yum install httpd -y
@@ -277,11 +278,15 @@ sudo setsebool -P httpd_execmem 1
 
 - **I repeated steps 1-5 for another 2 Web Servers**.
 
-6. - I verified that Apache files and directories are available on the Web Server in **/var/www** and also on the NFS server in **/mnt/apps**. Seeing the same files – it means NFS is mounted correctly. I created a new file **touch test.txt** from one server and checked if the same file is accessible from other Web Servers.
+# 6. - I verified that Apache files and directories are available on the Web Server in **/var/www** and also on the NFS server in **/mnt/apps**. 
+
+Seeing the same files – it means NFS is mounted correctly. I created a new file **touch test.txt** from one server and checked if the same file is accessible from other Web Servers.
 
 ![7_6](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/ac9e8e97-848b-4a12-83d9-2a2c6315e19d)
 
-7. - I located the log folder for Apache on the Web Server and mounted it to NFS server’s export for logs. I repeated step **No 4** to make sure the mount point will persist after reboot. Log folder for Apache is in this path /var/log/httpd
+# 7 # - I located the log folder for Apache on the Web Server and mounted it to NFS server’s export for logs. 
+
+I repeated step **No 4** to make sure the mount point will persist after reboot. Log folder for Apache is in this path /var/log/httpd
 
 ```
 ls /var/logs  - you will see httpd, this is the log folder for Apache, it shld be empty, check with below
@@ -301,7 +306,8 @@ sudo vi /etc/fstab
 172.31.23.140:/mnt/logs /var/log/httpd nfs defaults 0 0
 ```
 
-8. - I forked the tooling source code from [Darey.io Github Account](https://github.com/darey-io/tooling) to my Github account. (Learn how to fork a repo [here](https://www.youtube.com/watch?v=f5grYMXbAV0))
+# 8 # - I forked the tooling source code 
+from [Darey.io Github Account](https://github.com/darey-io/tooling) to my Github account. (Learn how to fork a repo [here](https://www.youtube.com/watch?v=f5grYMXbAV0))
 
 ```
 I first ensured git is installed on my web server and also initialized, Then proceeded to run git clone. I also confirmed the download was successfull
@@ -312,18 +318,45 @@ ls
 ```
 
 
-9. - I deployed the tooling website’s code to the Webserver. i ensured that the html folder from the repository is deployed to **/var/www/html**
+# 9. - I deployed the tooling website’s code to the Webserver. 
+
+i ensured that the html folder from the repository is deployed to **/var/www/html**
 
 ```
 cd tooling
 ls /var/www    confirm there is a html folder here
-sudo cp -R html/. /var/www/html   Run this while on tooling directory, the target is to copy ALL the content of html(inside the dowloaded repo - toolin
 
+Run below while on tooling directory, 
+the target is to copy ALL the content of html(inside the dowloaded repo - toolin
+sudo cp -R html/. /var/www/html   
 
-- **Note 1**: I opened the TCP port 80 on the Web Server.
+confirm the copying was successful, same content should be on below paths
+ls /var/www/html    
+ls html
+```
 
-- **Note 2**: If you encounter 403 Error – check permissions to your **/var/www/html** folder and also disable SELinux `sudo setenforce 0`
+- **Note 1**: 
+I opened the TCP port 80 on the Web Server.
 
+![7_7](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/00d921c9-9e22-4f18-8eb8-8b8678ff6253)
 
+- **Note 2**: 
+I tried launching my web server public IP on my browser, and got 403 error/page not loading, i first checked that apache is running on the web server
 
+Then i proceeded to  – check permissions to on **/var/www/html** folder and also disable SELinux `sudo setenforce 0`
 
+To make this change permanent – open following config file sudo vi /etc/sysconfig/selinux and set SELINUX=disabledthen restrt httpd, and then checked the status of the Apache again
+
+```
+cd ..
+sudo systemctl status httpd
+sudo vi /etc/sysconfig/selinux
+sudo systemctl start httpd
+sudo systemctl status httpd
+```
+
+![7_9](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/d4a016f5-a2d2-4bec-9be0-c1911e4b7d9c)
+
+I reloaded the web server public IP and now got below - this confirms users on the web can send a request to my web server and get below test page displayed.
+
+![7_10](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/0fd02ae7-bac9-4d9a-b224-f0ebc012e620)
