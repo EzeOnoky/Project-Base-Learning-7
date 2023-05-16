@@ -49,7 +49,7 @@ On the example of AWS services understand the difference between Block Storage, 
 
 It is important to know what storage solution is suitable for what use cases, for this – you need to answer following questions: what data will be stored, in what format, how this data will be accessed, by whom, from where, how frequently, etc. Base on this you will be able to choose the right storage system for your solution.
 
-### STEP 1 – ***PREPARE NFS SERVER***
+## STEP 1 – ***PREPARE NFS SERVER***
 
 1. - I Spinned up a new EC2 instance with RHEL Linux 8 Operating System.
 For Rhel 8 server use this ami RHEL-8.6.0_HVM-20220503-x86_64-2-Hourly2-GP2 (ami-035c5dc086849b5de)
@@ -164,7 +164,7 @@ sudo exportfs -arv
 
 ![7_4](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/d6b7520d-0a72-4c9b-927f-51608d55f0e9)
 
-### STEP 2 — ***CONFIGURE THE DATABASE SERVER***
+## STEP 2 — ***CONFIGURE THE DATABASE SERVER***
 
 1. - I installed MySQL server on the Ubuntu OS
 
@@ -202,7 +202,7 @@ exit;
 ![7_5](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/2cd6341a-05be-46a6-8446-c7ab3bd3c1c9)
 
 
-### Step 3 — ***PREPARE THE WEB SERVER***
+## Step 3 — ***PREPARE THE WEB SERVER***
 
 - I ensured that the Web Servers can serve the same content from shared storage solutions, in this case – NFS Server and MySQL database.
 Knowing that one DB can be accessed for **reads** and **writes** by multiple clients. For storing shared files that the Web Servers will use – I utilized NFS and mount previously created Logical Volume **lv-apps** to the folder where Apache stores files to be served to the users **(/var/www)**.
@@ -219,15 +219,16 @@ So basically, i seek to mount on my web server, all the logical volumes which i 
 
  - Configured the Web Servers to work with a single MySQL database
 
-# 1 # . - I launched a new EC2 instance with RHEL 8 Operating System
+### 1 . - I launched a new EC2 instance with RHEL 8 Operating System
 
-2. - I installed NFS client using below command, note - without this installation, i will not be able to access the NFS Server from the web server
+### 2. - I installed NFS client using below command
+Note - without this installation, i will not be able to access the NFS Server from the web server
 
 ```
 sudo yum install nfs-utils nfs4-acl-tools -y
 ```
 
-# 3 #. - I mounted **/var/www/** and target the NFS server’s export for apps
+### 3 - I mounted **/var/www/** and target the NFS server’s export for apps
 
 ```
 sudo mkdir /var/www
@@ -239,7 +240,7 @@ Executed Script
 sudo mount -t nfs -o rw,nosuid 172.31.23.140:/mnt/apps /var/www
 ```
 
-# 4 #. - I verified that NFS was mounted successfully by running `df -h`. I ensured that the changes will persist on Web Server after reboot:
+### 4 - I verified that NFS was mounted successfully by running `df -h`. I ensured that the changes will persist on Web Server after reboot:
 
 - `sudo vi /etc/fstab`
 
@@ -253,7 +254,7 @@ Executed Script
 172.31.23.140:/mnt/apps /var/www nfs defaults 0 0
 ```
 
-# 5 # - I installed  Apache and PHP,
+### 5 - I installed  Apache and PHP,
 Remi's Repository  [Remi’s repository](http://www.servermom.org/how-to-enable-remi-repo-on-centos-7-6-and-5/2790/). Without the Apache you cant server content to your users, Nginx, Apache etc are the popular web servers clients out there.
 
 ```
@@ -278,13 +279,13 @@ sudo setsebool -P httpd_execmem 1
 
 - **I repeated steps 1-5 for another 2 Web Servers**.
 
-# 6. - I verified that Apache files and directories are available on the Web Server in **/var/www** and also on the NFS server in **/mnt/apps**. 
+### 6 - I verified that Apache files and directories are available on the Web Server in **/var/www** and also on the NFS server in **/mnt/apps**. 
 
 Seeing the same files – it means NFS is mounted correctly. I created a new file **touch test.txt** from one server and checked if the same file is accessible from other Web Servers.
 
 ![7_6](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/ac9e8e97-848b-4a12-83d9-2a2c6315e19d)
 
-# 7 # - I located the log folder for Apache on the Web Server and mounted it to NFS server’s export for logs. 
+### 7 - I located the log folder for Apache on the Web Server and mounted it to NFS server’s export for logs. 
 
 I repeated step **No 4** to make sure the mount point will persist after reboot. Log folder for Apache is in this path /var/log/httpd
 
@@ -306,7 +307,7 @@ sudo vi /etc/fstab
 172.31.23.140:/mnt/logs /var/log/httpd nfs defaults 0 0
 ```
 
-# 8 # - I forked the tooling source code 
+### 8 - I forked the tooling source code 
 from [Darey.io Github Account](https://github.com/darey-io/tooling) to my Github account. (Learn how to fork a repo [here](https://www.youtube.com/watch?v=f5grYMXbAV0))
 
 ```
@@ -318,7 +319,7 @@ ls
 ```
 
 
-# 9. - I deployed the tooling website’s code to the Webserver. 
+### 9. - I deployed the tooling website’s code to the Webserver. 
 
 i ensured that the html folder from the repository is deployed to **/var/www/html**
 
