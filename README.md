@@ -201,6 +201,21 @@ exit;
 ```
 ![7_5](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/2cd6341a-05be-46a6-8446-c7ab3bd3c1c9)
 
+5. - I ensured below ports were opened on the DB server, this is to allow the web server connect to mysql on the DB Server
+![7_12](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/38e9330b-a9af-4bfc-af2e-68628ca6d4d9)
+
+I also ensure the binding address was set...
+
+sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf
+
+![7_13](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/74634906-6815-4bfd-b2e2-f891357f275e)
+
+MYSQL on the DB Server was restarted and its status was checked
+
+sudo systemctl restart mysqld
+sudo systemctl status mysqld
+
+
 
 ## Step 3 — ***PREPARE THE WEB SERVER***
 
@@ -361,3 +376,29 @@ sudo systemctl status httpd
 I reloaded the web server public IP and now got below - this confirms users on the web can send a request to my web server and get below test page displayed.
 
 ![7_10](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/0fd02ae7-bac9-4d9a-b224-f0ebc012e620)
+
+### 9 I Updated the website’s configuration to connect to the database
+
+```
+sudo vi /var/www/html/functions.php
+```
+
+![7_11](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/025ddda0-bbb1-41fc-be3f-3573c572916c)
+
+I Applied tooling-db.sql script to my database using this command mysql -h <databse-private-ip> -u <db-username> -p <db-pasword> < tooling-db.sql
+I first installed mysql then proceeded to below.
+
+### 10 I Updated the website’s configuration to connect to the database
+First return to step 6 on the processes for setup of the DB Server
+                                                                                                                                                 
+```
+cd tooling
+sudo yum install mysql -y                                                                                                                                                 
+mysql -h <databse-server-private-ip> -u <db-username> -p <db-pasword> < tooling-db.sql
+
+Executed Script
+NB, the tooling password is not the real password
+I got a propmt to input the correct password for the webaccess user on the DB                                                                                      
+mysql -h 172.31.91.150 -u webaccess -p tooling < tooling-db.sql
+```
+                                                                               
