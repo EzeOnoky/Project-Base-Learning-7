@@ -327,14 +327,14 @@ sudo vi /etc/fstab
 ### 8 - I forked the tooling source code 
 from [Darey.io Github Account](https://github.com/darey-io/tooling) to my Github account. (Learn how to fork a repo [here](https://www.youtube.com/watch?v=f5grYMXbAV0))
 
-```
+
 I first ensured git is installed on my web server and also initialized, Then proceeded to run git clone. I also confirmed the download was successfull
+```
 sudo yum install git -y
 git init
 git clone https://github.com/darey-io/tooling.git
 ls
 ```
-
 
 ### 9. - I deployed the tooling website’s code to the Webserver. 
 
@@ -387,10 +387,11 @@ sudo vi /var/www/html/functions.php
 
 ![7_11](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/025ddda0-bbb1-41fc-be3f-3573c572916c)
 
-I Applied tooling-db.sql script to my database using this command mysql -h <databse-private-ip> -u <db-username> -p <db-pasword> < tooling-db.sql
-I first installed mysql then proceeded to below.
 
 ### 10 I Updated the website’s configuration to connect to the database
+I Applied tooling-db.sql script to my database using this command `mysql -h <databse-private-ip> -u <db-username> -p <db-pasword> < tooling-db.sql`
+I first installed mysql then proceeded to below.
+
 First return to step 6 on the processes for setup of the DB Server
                                                                                                                                                  
 ```
@@ -399,8 +400,9 @@ sudo yum install mysql -y
 mysql -h <databse-server-private-ip> -u <db-username> -p <db-pasword> < tooling-db.sql
 
 Executed Script
-NB, the tooling password is not the real password
-I got a propmt to input the correct password for the webaccess user on the DB                                                                                      
 mysql -h 172.31.91.150 -u webaccess -p tooling < tooling-db.sql
 ```
+NB, the tooling password captured above is not the real password, I got a propmt to input the correct password for the webaccess user on the DB                                                                                      
+
+
                                                                                
