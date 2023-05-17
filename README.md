@@ -216,9 +216,10 @@ sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf
 
 MYSQL on the DB Server was restarted and its status was checked
 
+```
 sudo systemctl restart mysqld
 sudo systemctl status mysqld
-
+```
 
 
 ## Step 3 — ***PREPARE THE WEB SERVER***
