@@ -56,7 +56,7 @@ For Rhel 8 server use this ami RHEL-8.6.0_HVM-20220503-x86_64-2-Hourly2-GP2 (ami
 
 2. - Based on my LVM experience from **Project 6**, I Configured 3 LVM on the Server.
 
-Install lvm2 package, create physical volume, create a volume group, create logical volume, format the disk with xfs file system 
+Install lvm2 package, created physical volume, created a volume group, created logical volume, formated the disk with xfs file system 
 ```
 sudo yum install lvm2
 sudo lvmdiskscan
@@ -120,7 +120,7 @@ To check the ***subnet cidr*** – I opened my EC2 details in AWS web console an
 
 ![7_3](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/bfa7b0f0-43b6-42e0-8194-59eaff2a3ac4)
 
-- I make sure I set up permission that will allow the Web servers to read, write and execute files on NFS:
+- I made sure I set up permission that will allow the Web servers to read, write and execute files on NFS:
 
 ```
 Change ownership of the directory
@@ -153,14 +153,18 @@ Script modified & Executed
 /mnt/opt 172.31.16.0/20(rw,sync,no_all_squash,no_root_squash)
 
 Esc + :wq!
-
-Export modified file, so that the web servers will be able to access it
-sudo exportfs -arv
 ```
+
+I Exported modified file, so that the web servers will be able to access it
+
+`sudo exportfs -arv`
+
 
 6. - I checked which port is used by NFS and opened it using Security Groups (add new Inbound Rule)
 
-- `rpcinfo -p | grep nfs` The port is **2049**
+- `rpcinfo -p | grep nfs` 
+
+The port used is **2049**
 
 ![7_4](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/d6b7520d-0a72-4c9b-927f-51608d55f0e9)
 
@@ -168,16 +172,16 @@ sudo exportfs -arv
 
 1. - I installed MySQL server on the Ubuntu OS
 
-```
 USED for installing MYSQL on a Ubuntu OS, Always run APT update 1st
+```
 sudo apt update
 sudo apt install mysql-server -y
 sudo systemctl restart mysqld
 sudo systemctl enable mysqld
 ```
 
-```
 USED for installing MYSQL on a RedHart OS, Always run YUM update 1st
+```
 sudo yum update
 sudo yum install mysql-server -y
 sudo systemctl restart mysqld
@@ -204,7 +208,7 @@ exit;
 5. - I ensured below ports were opened on the DB server, this is to allow the web server connect to mysql on the DB Server
 ![7_12](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/38e9330b-a9af-4bfc-af2e-68628ca6d4d9)
 
-I also ensure the binding address was set...
+I also ensured the binding address was set...
 
 sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf
 
@@ -224,7 +228,7 @@ Knowing that one DB can be accessed for **reads** and **writes** by multiple cli
 
 - This approach will make the Web Servers **stateless**, which means I will be able to add new ones or remove them whenever I need, and the integrity of the data (in the database and on NFS) will be preserved.
 
-So basically, i seek to mount on my web server, all the logical volumes which i have created previously on the NFS server
+**So basically, i seek to mount on my web server, all the logical volumes which i have created previously on the NFS server
 
 - During the next steps I did the following:
 
@@ -239,9 +243,7 @@ So basically, i seek to mount on my web server, all the logical volumes which i 
 ### 2. - I installed NFS client using below command
 Note - without this installation, i will not be able to access the NFS Server from the web server
 
-```
-sudo yum install nfs-utils nfs4-acl-tools -y
-```
+`sudo yum install nfs-utils nfs4-acl-tools -y`
 
 ### 3 - I mounted **/var/www/** and target the NFS server’s export for apps
 
@@ -269,7 +271,7 @@ Executed Script
 172.31.23.140:/mnt/apps /var/www nfs defaults 0 0
 ```
 
-### 5 - I installed  Apache and PHP,
+### 5 - I installed  Apache and PHP on the Web server
 Remi's Repository  [Remi’s repository](http://www.servermom.org/how-to-enable-remi-repo-on-centos-7-6-and-5/2790/). Without the Apache you cant server content to your users, Nginx, Apache etc are the popular web servers clients out there.
 
 ```
