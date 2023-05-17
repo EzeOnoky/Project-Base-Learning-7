@@ -392,8 +392,6 @@ sudo vi /var/www/html/functions.php
 ### 10 I Updated the website’s configuration to connect to the database
 I Applied tooling-db.sql script to my database using this command `mysql -h <databse-private-ip> -u <db-username> -p <db-pasword> < tooling-db.sql`
 I first installed mysql then proceeded to below.
-
-First return to step 6 on the processes for setup of the DB Server
                                                                                                                                                  
 ```
 cd tooling
