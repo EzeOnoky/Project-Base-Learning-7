@@ -449,7 +449,7 @@ sudo systemctl restart httpd
 
 I was able to log in with the admin user from my tooling script above - user - admin, password - admin
 
-#Congratulations! I was able to implemented a web solution for a DevOps team using LAMP stack with remote Database and NFS servers
+# Congratulations! I was able to implemented a web solution for a DevOps team using LAMP stack with remote Database and NFS servers
 
 
                                                                                
