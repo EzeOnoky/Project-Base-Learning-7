@@ -364,7 +364,7 @@ I tried launching my web server public IP on my browser, and got 403 error/page 
 
 Then i proceeded to  – check permissions to on **/var/www/html** folder and also disable SELinux `sudo setenforce 0`
 
-To make this change permanent – open following config file sudo vi /etc/sysconfig/selinux and set SELINUX=disabledthen restrt httpd, and then checked the status of the Apache again
+To make this change permanent – open following config file sudo vi /etc/sysconfig/selinux and set SELINUX=disabled  then restarted httpd, and then checked the status of the Apache again
 
 ```
 cd ..
@@ -391,8 +391,9 @@ sudo vi /var/www/html/functions.php
 
 ### 10 I Updated the website’s configuration to connect to the database
 I Applied tooling-db.sql script to my database using this command `mysql -h <databse-private-ip> -u <db-username> -p <db-pasword> < tooling-db.sql`
-I first installed mysql then proceeded to below.
-                                                                                                                                                 
+
+I first installed mysql then proceeded to apply the tooling script.
+
 ```
 cd tooling
 sudo yum install mysql -y                                                                                                                                                 
@@ -401,7 +402,52 @@ mysql -h <databse-server-private-ip> -u <db-username> -p <db-pasword> < tooling-
 Executed Script
 mysql -h 172.31.91.150 -u webaccess -p tooling < tooling-db.sql
 ```
-NB, the tooling password captured above is not the real password, I got a propmt to input the correct password for the webaccess user on the DB                                                                                      
+NB, the tooling password captured above is not the real password, I got a propmt to input the correct password for the webaccess user on the DB.
+
+Now I returned to my DATABASE SERVER and ran below commands
+
+```
+sudo mysql
+show databases;
+use tooling;
+show tables;
+select * from users;
+```
+On mysql table on the DB Server, the user displyed, afer checking `select * from users;` is same as the user diplayed when i run `sudo vi tooling-db.sql` from my web server
+
+Now on the web server, i located the test web page currently displayed to my end users and renamed it
+
+```
+ls /etc/httpd/conf.d/welcome.conf
+sudo vi /etc/httpd/conf.d/welcome.conf
+sudo mv /etc/httpd/conf.d/welcome.conf /etc/httpd/conf.d/welcome.backup
+sudo systemctl restart httpd
+sudo systemctl status httpd
+```
+Below is the tooling website i seek to create, but i now have to install some PHP dependencies which will present the tooling wesite is the correct web page for my end users. These PHP dependencies are installed on the web server.
+
+![7_14](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/40330c5f-5507-4d85-bf37-abd9432f2df5)
+
+These PHP dependencies are installed on the web server.
+
+```
+sudo yum install httpd -y
+sudo yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+sudo yum install yum-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm
+sudo yum module list php -y
+sudo yum module reset php -y
+sudo yum module enable php:remi-7.4 -y
+sudo yum install php php-opcache php-gd php-curl php-mysqlnd -y
+sudo systemctl start php-fpm
+sudo systemctl enable php-fpm
+sudo systemctl status php-fpm
+sudo setsebool -P httpd_execmem 1
+
+Always ensure you restart Apache after making above changes, else the webpage will not load
+sudo systemctl restart httpd
+```
+
+I was able to log in with the admin user from my tooling script above - user - admin, password - admin
 
 
                                                                                
