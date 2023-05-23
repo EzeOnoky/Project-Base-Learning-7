@@ -188,6 +188,8 @@ sudo systemctl restart mysqld
 sudo systemctl enable mysqld
 ```
 
+Remember to install some security on mysql DB while on production network, you may want to run this... `sudo mysql_secure_installation` but we are not going into this
+
 2. - I created a database and named it **tooling**
 
 3. - I created a database user and named it **webaccess**
@@ -296,7 +298,7 @@ sudo setsebool -P httpd_execmem 1
 
 ```
 
-On checking the Web Page Public IP on the browser URL, below was displayed - confirming that Apache was successfully installed on the web server
+On checking the Web Server Public IP on the browser URL, below was displayed - confirming that Apache was successfully installed on the web server
 
 ![7_10](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/3c48ffa8-64b5-4bf0-a130-3e27989d93c6)
 
@@ -351,12 +353,12 @@ i ensured that the html folder from the repository is deployed to **/var/www/htm
 
 ```
 cd tooling
-ls /var/www    confirm there is a html folder here
+ls /var/www/html         confirm the content
 
 Run below while on tooling directory, the target is to copy ALL the content of html(inside the dowloaded repo - tooling) into
-the folder that gives us the default Apache page as in *step 5 - I installed  Apache and PHP on the Web server* - pls refer to it
+the folder(/var/www/html) that gives us the default Apache page as in *step 5 - I installed  Apache and PHP on the Web server* above
 
-sudo cp -R html/. /var/www/html   
+sudo cp -R html/* /var/www/html   
 
 confirm the copying was successful, same content should be on below paths
 
@@ -374,7 +376,10 @@ I tried launching my web server public IP on my browser, and got 403 error/page 
 
 Then i proceeded to  – check permissions to on **/var/www/html** folder and also disable SELinux `sudo setenforce 0`
 
+
 To make this change permanent – open following config file sudo vi /etc/sysconfig/selinux and set SELINUX=disabled  then restarted httpd, and then checked the status of the Apache again
+
+I aslo checked this config file -  `sudo vi /etc/apache2/mods-enabled/dir.conf`  and confirmed that index.php is set as priority on the list.
 
 ```
 cd ..
@@ -383,6 +388,8 @@ sudo vi /etc/sysconfig/selinux
 sudo systemctl start httpd
 sudo systemctl status httpd
 ```
+
+NB - Always minimize the running a restart command in a production network - `sudo systemctl restart apache2` subcriber use of services are impacted, rather use reload .... `sudo systemctl reload apache2`
 
 ![7_9](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/d4a016f5-a2d2-4bec-9be0-c1911e4b7d9c)
 
