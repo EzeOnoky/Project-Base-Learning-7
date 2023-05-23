@@ -51,10 +51,10 @@ It is important to know what storage solution is suitable for what use cases, fo
 
 ## STEP 1 – ***PREPARE NFS SERVER***
 
-1. - I Spinned up a new EC2 instance with RHEL Linux 8 Operating System.
+### 1. - I Spinned up a new EC2 instance with RHEL Linux 8 Operating System.
 For Rhel 8 server use this ami RHEL-8.6.0_HVM-20220503-x86_64-2-Hourly2-GP2 (ami-035c5dc086849b5de)
 
-2. - Based on my LVM experience from **Project 6**, I Configured 3 LVM on the Server.
+###  2. - Based on my LVM experience from **Project 6**, I Configured 3 LVM on the Server.
 
 Install lvm2 package, created physical volume, created a volume group, created logical volume, formated the disk with xfs file system 
 ```
@@ -85,7 +85,7 @@ sudo mkfs -t xfs /dev/webdata-vg/lv-opt
 lsblk
 ```
 
-3. - I ensured there are 3 **Logical Volumes**. ***lv-opt lv-apps, and lv-logs***
+### 3. - I ensured there are 3 **Logical Volumes**. ***lv-opt lv-apps, and lv-logs***
 
 I created mount points on **/mnt** directory for the logical volumes as follow:
 - Mount **lv-apps** on **/mnt/apps** – To be used by webservers
@@ -103,7 +103,7 @@ sudo mount /dev/webdata-vg/lv-logs /mnt/logs
 sudo mount /dev/webdata-vg/lv-opt /mnt/opt
 ```
 
-4. - I installed NFS server, configured it to start on reboot and made sure it is up and running
+### 4. - I installed NFS server, configured it to start on reboot and made sure it is up and running
 
 ```
 sudo yum -y update
@@ -114,7 +114,8 @@ sudo systemctl status nfs-server.service
 ```
 ![7_2](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/19d68401-1eac-4032-9e91-23dcf13fb308)
 
-5. -I exported the mounts for webservers’ ***subnet cidr*** to connect as clients. For simplicity, I installed all the three Web Servers inside the same subnet, but in production set up I would probably want to separate each tier inside its own subnet for higher level of security.
+### 5. -I exported the mounts for webservers’ ***subnet cidr*** to connect as clients. 
+For simplicity, I installed all the three Web Servers inside the same subnet, but in production set up I would probably want to separate each tier inside its own subnet for higher level of security.
 
 To check the ***subnet cidr*** – I opened my EC2 details in AWS web console and located ‘Networking’ tab and opened a Subnet link:
 
@@ -160,7 +161,7 @@ I Exported modified file, so that the web servers will be able to access it
 `sudo exportfs -arv`
 
 
-6. - I checked which port is used by NFS and opened it using Security Groups (add new Inbound Rule)
+### 6. - I checked which port is used by NFS and opened it using Security Groups (add new Inbound Rule)
 
 - `rpcinfo -p | grep nfs` 
 
@@ -168,9 +169,12 @@ The port used is **2049**
 
 ![7_4](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/d6b7520d-0a72-4c9b-927f-51608d55f0e9)
 
+
+
+
 ## STEP 2 — ***CONFIGURE THE DATABASE SERVER***
 
-1. - I installed MySQL server on the Ubuntu OS
+### 1. - I installed MySQL server on the Ubuntu OS
 
 USED for installing MYSQL on a Ubuntu OS, Always run APT update 1st
 ```
@@ -190,11 +194,11 @@ sudo systemctl enable mysqld
 
 Remember to install some security on mysql DB while on production network, you may want to run this... `sudo mysql_secure_installation` but we are not going into this
 
-2. - I created a database and named it **tooling**
+### 2. - I created a database and named it **tooling**
 
-3. - I created a database user and named it **webaccess**
+### 3. - I created a database user and named it **webaccess**
 
-4. - I granted permission to **webaccess** user on **tooling** database to do anything only from the webservers **subnet cidr**
+### 4. - I granted permission to **webaccess** user on **tooling** database to do anything only from the webservers **subnet cidr**
 
 ```
 sudo mysql
@@ -203,14 +207,21 @@ CREATE USER `webaccess`@`172.31.16.0/20` IDENTIFIED BY 'password';
 GRANT ALL ON tooling.* TO 'webaccess'@'172.31.16.0/20';
 FLUSH PRIVILEGES;
 SHOW DATABASES;
+use webaccess;   - there is no table yet here
+use mysql;       - try accessing an existing database
+show tables;
+describe table proxies_priv;
+select 'partition', 'possible_keys', 'key' from proxies_priv
 exit;
 ```
 ![7_5](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/2cd6341a-05be-46a6-8446-c7ab3bd3c1c9)
 
-5. - I ensured below ports were opened on the DB server, this is to allow the web server connect to mysql on the DB Server
+### 5. - Allow Port Access, Set Binding Address
+I ensured below ports were opened on the DB server, this is to allow the web server connect to mysql on the DB Server
 ![7_12](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/38e9330b-a9af-4bfc-af2e-68628ca6d4d9)
 
 I also ensured the binding address was set...
+Bind-Address = 127.0.0.1 means the DB is only listen for connection from the local host,this is what we could connect to the DB locally, but could connect remotely. Bind address can be restricted to an IP, a subet or it is opened to ALL
 
 sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf
 
@@ -399,6 +410,8 @@ I reloaded the web server public IP and now got below - this confirms users on t
 
 ### 9 I Updated the website’s configuration to connect to the database
 
+So basically, we seek to make the web server successfully connect the DB server which we have already setup
+
 ```
 sudo vi /var/www/html/functions.php
 ```
@@ -406,7 +419,8 @@ sudo vi /var/www/html/functions.php
 ![7_11](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/025ddda0-bbb1-41fc-be3f-3573c572916c)
 
 
-### 10 I Updated the website’s configuration to connect to the database
+### 10 Creating A table for the User on my Data Base
+We have created the Data Base, We have created the users, but we  have not created the table that will hold the data inputted to the DB. To achieve this...
 I Applied tooling-db.sql script to my database using this command `mysql -h <databse-private-ip> -u <db-username> -p <db-pasword> < tooling-db.sql`
 
 I first installed mysql then proceeded to apply the tooling script.
@@ -419,18 +433,24 @@ mysql -h <databse-server-private-ip> -u <db-username> -p <db-pasword> < tooling-
 Executed Script
 mysql -h 172.31.91.150 -u webaccess -p tooling < tooling-db.sql
 ```
-NB, the tooling password captured above is not the real password, I got a propmt to input the correct password for the webaccess user on the DB.
+Above script described  =>  i want to connect to mysql on the DB - 172.31.91.150, using user -u : webaccess , using password -p as my authentication, i want to connect directly to the toolong DB we have created on the DB Server, once connected, i want to run this sql file - tooling-db.sql, which has already been created. 
+
+NB, the tooling password captured above is not the real password, I got a propmt to input the correct password for the webaccess user already cretaed on the DB.
 
 Now I returned to my DATABASE SERVER and ran below commands
 
 ```
 sudo mysql
 show databases;
-use tooling;
-show tables;
-select * from users;
+use tooling;       => connecs you DIRECTLY to the tooling DB
+show tables;       => This will now have users 
+select * from users;  => This shows the table that has been created for the tooling DB while i was still conected on the web sever
 ```
 On mysql table on the DB Server, the user displyed, afer checking `select * from users;` is same as the user diplayed when i run `sudo vi tooling-db.sql` from my web server
+
+Try to  the reload the Web Server test page which was displayed after APache was install, if you get error - `Failed to connect to MySQL:Connectin refused` , this means there is connectivity, but MySQL is refusing the connection. To trouble this 1st check is MYSQL is running, systemctl status mysql. Next confirm if the require port numbers have been opened on your MYSQL server - try both `telnet  localhost 3306` & `telnet  localhost 33045` and see the outputs, next is to check the inbound rule on the DB Server. I also ensured the binding address is set to 0.0.0.0
+
+I reloaded the test web page again using the web server Public IP, and the default username and password(admin/admin).
 
 Now on the web server, i located the test web page currently displayed to my end users and renamed it
 
