@@ -293,7 +293,13 @@ sudo systemctl start php-fpm
 sudo systemctl enable php-fpm
 
 sudo setsebool -P httpd_execmem 1
+
 ```
+
+On checking the Web Page Public IP on the browser URL, below was displayed - confirming that Apache was successfully installed on the web server
+
+![7_10](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/3c48ffa8-64b5-4bf0-a130-3e27989d93c6)
+
 
 - **I repeated steps 1-5 for another 2 Web Servers**.
 
@@ -329,12 +335,14 @@ sudo vi /etc/fstab
 from [Darey.io Github Account](https://github.com/darey-io/tooling) to my Github account. (Learn how to fork a repo [here](https://www.youtube.com/watch?v=f5grYMXbAV0))
 
 
-I first ensured git is installed on my web server and also initialized, Then proceeded to run git clone. I also confirmed the download was successfull
+I first ensured git is installed on my web server and also initialized, Then proceeded to run git clone. I also confirmed the download was successfull. Git is a tool used by software Engineers, it allows us to source code management. Considering u a working a team of software engineers. E.g, i can be working on login page mgt, another software Engineer is working on user access creation. There is need for source code mgt in this type of setting. How do we bring the 2 projects toghther to create a working software.
 ```
+which git
 sudo yum install git -y
 git init
 git clone https://github.com/darey-io/tooling.git
 ls
+which git
 ```
 
 ### 9. - I deployed the tooling website’s code to the Webserver. 
@@ -345,11 +353,13 @@ i ensured that the html folder from the repository is deployed to **/var/www/htm
 cd tooling
 ls /var/www    confirm there is a html folder here
 
-Run below while on tooling directory, 
-the target is to copy ALL the content of html(inside the dowloaded repo - toolin
+Run below while on tooling directory, the target is to copy ALL the content of html(inside the dowloaded repo - tooling) into
+the folder that gives us the default Apache page as in *step 5 - I installed  Apache and PHP on the Web server* - pls refer to it
+
 sudo cp -R html/. /var/www/html   
 
 confirm the copying was successful, same content should be on below paths
+
 ls /var/www/html    
 ls html
 ```
