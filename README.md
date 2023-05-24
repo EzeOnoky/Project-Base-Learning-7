@@ -221,7 +221,7 @@ I ensured below ports were opened on the DB server, this is to allow the web ser
 ![7_12](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/38e9330b-a9af-4bfc-af2e-68628ca6d4d9)
 
 I also ensured the binding address was set...
-Bind-Address = 127.0.0.1 means the DB is only listen for connection from the local host,this is what we could connect to the DB locally, but could connect remotely. Bind address can be restricted to an IP, a subet or it is opened to ALL
+Bind-Address = 127.0.0.1 means the DB is only listening for connection from the local host,this is why we could connect to the DB locally, but could connect remotely. Bind address can be restricted to an IP, a subet or it is opened to ALL when 0.0.0.0 is used
 
 sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf
 
