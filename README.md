@@ -244,7 +244,7 @@ Knowing that one DB can be accessed for **reads** and **writes** by multiple cli
 
 **So basically, i seek to mount on my web server, all the logical volumes which i have created previously on the NFS server
 
-- During the next steps I did the following:
+During the next steps I did the following:
 
  - Configured NFS client (this step must be done on all three servers)
 
@@ -367,7 +367,7 @@ cd tooling
 ls /var/www/html         confirm the content
 
 Run below while on tooling directory, the target is to copy ALL the content of html(inside the dowloaded repo - tooling) into
-the folder(/var/www/html) that gives us the default Apache page as in *step 5 - I installed  Apache and PHP on the Web server* above
+the folder(/var/www/html) that gave us the default Apache page found in *step 5 - when i installed  Apache and PHP on the Web server* above
 
 sudo cp -R html/* /var/www/html   
 
@@ -433,7 +433,7 @@ mysql -h <databse-server-private-ip> -u <db-username> -p <db-pasword> < tooling-
 Executed Script
 mysql -h 172.31.91.150 -u webaccess -p tooling < tooling-db.sql
 ```
-Above script described  =>  i want to connect to mysql on the DB - 172.31.91.150, using user -u : webaccess , using password -p as my authentication, i want to connect directly to the toolong DB we have created on the DB Server, once connected, i want to run this sql file - tooling-db.sql, which has already been created. 
+Above script described  =>  i want to connect to mysql on the DB - 172.31.91.150, using user -u : webaccess , using password -p as my authentication, i want to connect directly to the tooling DB we have created on the DB Server, once connected, i want to run this sql file - tooling-db.sql, which has already been created. 
 
 NB, the tooling password captured above is not the real password, I got a propmt to input the correct password for the webaccess user already cretaed on the DB.
 
@@ -444,13 +444,13 @@ sudo mysql
 show databases;
 use tooling;       => connecs you DIRECTLY to the tooling DB
 show tables;       => This will now have users 
-select * from users;  => This shows the table that has been created for the tooling DB while i was still conected on the web sever
+select * from users;  => This shows the table that has been created using sql file - tooling-db.sql while i was conected to the web sever
 ```
 On mysql table on the DB Server, the user displyed, afer checking `select * from users;` is same as the user diplayed when i run `sudo vi tooling-db.sql` from my web server
 
-Try to  the reload the Web Server test page which was displayed after APache was install, if you get error - `Failed to connect to MySQL:Connectin refused` , this means there is connectivity, but MySQL is refusing the connection. To trouble this 1st check is MYSQL is running, systemctl status mysql. Next confirm if the require port numbers have been opened on your MYSQL server - try both `telnet  localhost 3306` & `telnet  localhost 33045` and see the outputs, next is to check the inbound rule on the DB Server. I also ensured the binding address is set to 0.0.0.0
+Try to  the reload the Web Server test page which was displayed after APache was install, if you get error - `Failed to connect to MySQL:Connectin refused` , this means there is connectivity, but MySQL is refusing the connection. To troubleshoot this, 1st check if MYSQL is running,  `systemctl status mysql`    Next confirm if the require port numbers have been opened on your MYSQL server - try both  `telnet  localhost 3306`   & `telnet  localhost 33045`  and see the outputs, next is to check the inbound rule on the DB Server. I also ensured the binding address is set to 0.0.0.0
 
-I reloaded the test web page again using the web server Public IP, and the default username and password(admin/admin).
+I reloaded the test web page again using the web server Public IP, and made log on attempt using the default username and password(admin/admin).
 
 Now on the web server, i located the test web page currently displayed to my end users and renamed it
 
