@@ -62,20 +62,34 @@ For Rhel 8 server use this ami RHEL-8.6.0_HVM-20220503-x86_64-2-Hourly2-GP2 (ami
 
 ###  2. - Based on my LVM experience from **Project 6**, I Configured 3 LVM on the Server.
 
-Install lvm2 package, created physical volume, created a volume group, created logical volume, formated the disk with xfs file system 
+1st I want to create a partition on the physical disk - xvdf, xvdh, xvdg, then we switch to logical volume management.
+
+Use gdisk utility to create a single partition on each of the 3 disks - xvdf, xvdh, xvdg, Install lvm2 package, created physical volume, created a volume group, created logical volume, formated the disk with xfs file system
+
+
+Use gdisk utility to create a single partition on each of the 3 disks - xvdf, xvdh, xvdg
+```
+sudo gdisk /dev/xvdf 
+sudo gdisk /dev/xvdg
+sudo gdisk /dev/xvdh
+```
+
+Install lvm2 package
+
 ```
 sudo yum install lvm2
 sudo lvmdiskscan
+```
+
+created physical volume, created a volume group, created 3 logical volume
+
+```
 sudo pvcreate /dev/xvdf1 /dev/xvdg1 /dev/xvdh1
 sudo pvs
-```
 
-```
 sudo vgcreate webdata-vg /dev/xvdh1 /dev/xvdg1 /dev/xvdf1
 sudo vgs
-```
 
-```
 sudo lvcreate -n lv-apps -L 9G webdata-vg
 sudo lvcreate -n lv-logs -L 9G webdata-vg
 sudo lvcreate -n lv-opt -L 9G webdata-vg
