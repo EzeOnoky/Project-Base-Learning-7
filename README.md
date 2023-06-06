@@ -187,9 +187,7 @@ I Exported modified file, so that the web servers will be able to access it
 
 The port used is **2049**
 
-![7_4](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/d6b7520d-0a72-4c9b-927f-51608d55f0e9)
-
-
+![7_4](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/fcf36201-1d1c-4516-9005-6442aaba2b38)
 
 
 ## STEP 2 — ***CONFIGURE THE DATABASE SERVER***
@@ -200,19 +198,19 @@ USED for installing MYSQL on a Ubuntu OS, Always run APT update 1st
 ```
 sudo apt update
 sudo apt install mysql-server -y
-sudo systemctl restart mysqld
-sudo systemctl enable mysqld
+sudo systemctl restart mysql
+sudo systemctl enable mysql
 ```
 
 USED for installing MYSQL on a RedHart OS, Always run YUM update 1st
 ```
 sudo yum update
 sudo yum install mysql-server -y
-sudo systemctl restart mysqld
-sudo systemctl enable mysqld
+sudo systemctl restart mysql
+sudo systemctl enable mysql
 ```
 
-Remember to install some security on mysql DB while on production network, you may want to run this... `sudo mysql_secure_installation` but we are not going into this
+Remember to install some security on mysql DB while on production network, you may want to run this... `sudo mysql_secure_installation` but we are not going into this. Also note, you installed mysql, not mysqld.
 
 ### 2. - I created a database and named it **tooling**
 
@@ -223,8 +221,8 @@ Remember to install some security on mysql DB while on production network, you m
 ```
 sudo mysql
 CREATE DATABASE tooling;
-CREATE USER `webaccess`@`172.31.16.0/20` IDENTIFIED BY 'password';
-GRANT ALL ON tooling.* TO 'webaccess'@'172.31.16.0/20';
+CREATE USER `webaccess`@`172.31.80.0/20` IDENTIFIED BY 'password';
+GRANT ALL ON tooling.* TO 'webaccess'@'172.31.80.0/20';
 FLUSH PRIVILEGES;
 SHOW DATABASES;
 use webaccess;   - there is no table yet here
@@ -250,8 +248,8 @@ sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf
 MYSQL on the DB Server was restarted and its status was checked
 
 ```
-sudo systemctl restart mysqld
-sudo systemctl status mysqld
+sudo systemctl restart mysql
+sudo systemctl status mysql
 ```
 
 
@@ -288,7 +286,7 @@ Script
 sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/apps /var/www
 
 Executed Script
-sudo mount -t nfs -o rw,nosuid 172.31.23.140:/mnt/apps /var/www
+sudo mount -t nfs -o rw,nosuid 172.31.89.150:/mnt/apps /var/www
 ```
 
 ### 4 - I verified that NFS was mounted successfully by running `df -h`. I ensured that the changes will persist on Web Server after reboot:
@@ -302,7 +300,7 @@ Script
 `<NFS-Server-Private-IP-Address>:/mnt/apps /var/www nfs defaults 0 0`
 
 Executed Script
-172.31.23.140:/mnt/apps /var/www nfs defaults 0 0
+172.31.89.150:/mnt/apps /var/www nfs defaults 0 0
 ```
 
 ### 5 - I installed  Apache and PHP on the Web server
@@ -347,14 +345,14 @@ Seeing the same files – it means NFS is mounted correctly. I created a new fil
 I repeated step **No 4** to make sure the mount point will persist after reboot. Log folder for Apache is in this path /var/log/httpd
 
 ```
-ls /var/logs  - you will see httpd, this is the log folder for Apache, it shld be empty, check with below
-sudo ls /var/logs/httpd
+ls /var/log  - you will see httpd, this is the log folder for Apache, it shld be empty, check with below
+sudo ls /var/log/httpd
 
 Script
 sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/log/httpd
  
  Executed
- sudo mount -t nfs -o rw,nosuid 172.31.23.140:/mnt/logs /var/log/httpd
+ sudo mount -t nfs -o rw,nosuid 172.31.89.150:/mnt/logs /var/log/httpd
  
 sudo ls /var/logs/httpd    confirm the mounting was successful
  
