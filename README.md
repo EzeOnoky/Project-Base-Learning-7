@@ -307,7 +307,7 @@ Executed Script
 172.31.89.150:/mnt/apps /var/www nfs defaults 0 0
 ```
 
-### 5 - I installed  Apache and PHP on the Web server
+### 5 - I installed  Apache on the Web server
 Remi's Repository  [Remi’s repository](http://www.servermom.org/how-to-enable-remi-repo-on-centos-7-6-and-5/2790/). Without the Apache, the web server will not be able to serve content to the web users, Nginx, Apache etc are the popular web servers clients out there.
 
 Note: ensure you run sudo yum update to install all the dependencies apache needs for it to run successfully on the web server. Without installation of these dependencies, apache will not start.
@@ -481,10 +481,11 @@ Below is the tooling website i seek to create, but i now have to install some PH
 
 ![7_14](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/40330c5f-5507-4d85-bf37-abd9432f2df5)
 
+ ### 11 Install PHP dependencies on the Web Server
+
 These PHP dependencies are installed on the web server.
 
 ```
-sudo yum install httpd -y
 sudo yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
 sudo yum install yum-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm
 sudo yum module list php -y
