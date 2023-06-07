@@ -406,15 +406,6 @@ I tried launching my web server public IP on my browser, and got error - This si
 Then i disabled SELinux `sudo setenforce 0`
  
 Afterwards, I opened following config file sudo vi /etc/sysconfig/selinux and set SELINUX=disabled
- 
-![7_77](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/4fadaf25-af33-4582-b8b5-7afecdbe7093)
-
-Then i  proceeded to  – check permissions to on **/var/www/html** folder 
-
-
-To make this change permanent – open following config file sudo vi /etc/sysconfig/selinux and set SELINUX=disabled  then restarted httpd, and then checked the status of the Apache again
-
-I aslo checked this config file -  `sudo vi /etc/apache2/mods-enabled/dir.conf`  and confirmed that index.php is set as priority on the list.
 
 ```
 cd ..
