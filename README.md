@@ -325,31 +325,6 @@ You can also confirm cgi.bin & html files exist on the NFS, on the NFS, run belo
 
 `ls /mnt/apps`
 
->>>>>>>>>REMOVE
-sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y
-
-sudo dnf install dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm -y
-
-sudo dnf module reset php -y
-
-sudo dnf module enable php:remi-7.4 -y
-
-sudo dnf install php php-opcache php-gd php-curl php-mysqlnd -y
-
-sudo systemctl start php-fpm
-
-sudo systemctl enable php-fpm
-
-sudo setsebool -P httpd_execmem 1
-
-```
-
-On checking the Web Server Public IP on the browser URL, below was displayed - confirming that Apache was successfully installed on the web server
-
-![7_10](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/3c48ffa8-64b5-4bf0-a130-3e27989d93c6)
-
->>>>>>>>>REMOVE
-
 - **I repeated steps 1-5 for another 2 Web Servers**.
 
 ### 6 - I verified that Apache files and directories are available on the Web Server in **/var/www** and also on the NFS server in **/mnt/apps**. 
@@ -387,7 +362,8 @@ sudo vi /etc/fstab
 from [Darey.io Github Account](https://github.com/darey-io/tooling) to my Github account. (Learn how to fork a repo [here](https://www.youtube.com/watch?v=f5grYMXbAV0))
 
 I first ensured git is installed on my web server and also initialized, Then proceeded to run git clone. I also confirmed the download was successfull. Git is a tool used by software Engineers, it allows us to source code management. Considering u a working a team of software engineers. E.g, i can be working on login page mgt, another software Engineer is working on user access creation. There is need for source code mgt in this type of setting. How do we bring the 2 projects toghther to create a working software.
-```
+
+ ```
 which git
 sudo yum install git -y
 git init
@@ -452,6 +428,7 @@ NB - Always minimize the running a restart command in a production network - `su
 
 ![7_9](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/d4a016f5-a2d2-4bec-9be0-c1911e4b7d9c)
 
+ 
 I reloaded the web server public IP and now got below - this confirms users on the web can send a request to my web server and get below test page displayed.
 
 ![7_10](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/0fd02ae7-bac9-4d9a-b224-f0ebc012e620)
