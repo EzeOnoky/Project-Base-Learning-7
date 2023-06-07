@@ -288,10 +288,14 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/apps /var/ww
 Executed Script
 sudo mount -t nfs -o rw,nosuid 172.31.89.150:/mnt/apps /var/www
 ```
+Note: the /var/www is located locally on our web server, while /mnt/apps is located remotely on our NFS. Run `df -h` cmd to confirm the mount was successful.
 
 ### 4 - I verified that NFS was mounted successfully by running `df -h`. I ensured that the changes will persist on Web Server after reboot:
 
-- `sudo vi /etc/fstab`
+```
+df -h
+sudo vi /etc/fstab
+```
 
 - I added the following line inside the file in the fstab
 
@@ -304,11 +308,24 @@ Executed Script
 ```
 
 ### 5 - I installed  Apache and PHP on the Web server
-Remi's Repository  [Remi’s repository](http://www.servermom.org/how-to-enable-remi-repo-on-centos-7-6-and-5/2790/). Without the Apache you cant server content to your users, Nginx, Apache etc are the popular web servers clients out there.
+Remi's Repository  [Remi’s repository](http://www.servermom.org/how-to-enable-remi-repo-on-centos-7-6-and-5/2790/). Without the Apache, the web server will not be able to serve content to the web users, Nginx, Apache etc are the popular web servers clients out there.
+
+Note: ensure you run sudo yum update to install all the dependencies apache needs for it to run successfully on the web server. Without installation of these dependencies, apache will not start.
 
 ```
+sudo yum update -y
 sudo yum install httpd -y
+```
 
+Confirm that cgi.bin & html file were successfully created on the webserver after the Apache installation
+
+`ls /var/www`
+
+You can also confirm cgi.bin & html files exist on the NFS, on the NFS, run below...
+
+`ls /mnt/apps`
+
+>>>>>>>>>REMOVE
 sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y
 
 sudo dnf install dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm -y
@@ -331,6 +348,7 @@ On checking the Web Server Public IP on the browser URL, below was displayed - c
 
 ![7_10](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/3c48ffa8-64b5-4bf0-a130-3e27989d93c6)
 
+>>>>>>>>>REMOVE
 
 - **I repeated steps 1-5 for another 2 Web Servers**.
 
@@ -342,10 +360,11 @@ Seeing the same files – it means NFS is mounted correctly. I created a new fil
 
 ### 7 - I located the log folder for Apache on the Web Server and mounted it to NFS server’s export for logs. 
 
-I repeated step **No 4** to make sure the mount point will persist after reboot. Log folder for Apache is in this path /var/log/httpd
+I repeated step **No 4** to make sure the mount point will persist after reboot. Log folder for Apache is in this path /var/log/httpd.
+The httpd folder(log folder for Apache) should be empty, comfirm this using below...
 
 ```
-ls /var/log  - you will see httpd, this is the log folder for Apache, it shld be empty, check with below
+ls /var/log  
 sudo ls /var/log/httpd
 
 Script
@@ -354,7 +373,9 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/lo
  Executed
  sudo mount -t nfs -o rw,nosuid 172.31.89.150:/mnt/logs /var/log/httpd
  
-sudo ls /var/logs/httpd    confirm the mounting was successful
+sudo ls /var/logs/httpd   
+ 
+I confirmed the mounting was successful by running `df -h` 
  
 I updated the fstab with below line
 
@@ -364,7 +385,6 @@ sudo vi /etc/fstab
 
 ### 8 - I forked the tooling source code 
 from [Darey.io Github Account](https://github.com/darey-io/tooling) to my Github account. (Learn how to fork a repo [here](https://www.youtube.com/watch?v=f5grYMXbAV0))
-
 
 I first ensured git is installed on my web server and also initialized, Then proceeded to run git clone. I also confirmed the download was successfull. Git is a tool used by software Engineers, it allows us to source code management. Considering u a working a team of software engineers. E.g, i can be working on login page mgt, another software Engineer is working on user access creation. There is need for source code mgt in this type of setting. How do we bring the 2 projects toghther to create a working software.
 ```
@@ -385,11 +405,11 @@ cd tooling
 ls /var/www/html         confirm the content
 
 Run below while on tooling directory, the target is to copy ALL the content of html(inside the dowloaded repo - tooling) into
-the folder(/var/www/html) that gave us the default Apache page found in *step 5 - when i installed  Apache and PHP on the Web server* above
+the Apache folder(/var/www/html)...which gave us the default Apache page found in *step 5 , after i installed  Apache on the Web server* above
 
 sudo cp -R html/* /var/www/html   
 
-confirm the copying was successful, same content should be on below paths
+confirm the copying was successful, same content should be on below paths - run below while on tooling directory
 
 ls /var/www/html    
 ls html
@@ -401,9 +421,19 @@ I opened the TCP port 80 on the Web Server.
 ![7_7](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/00d921c9-9e22-4f18-8eb8-8b8678ff6253)
 
 - **Note 2**: 
-I tried launching my web server public IP on my browser, and got 403 error/page not loading, i first checked that apache is running on the web server
+I tried launching my web server public IP on my browser, and got error - This site cant be reached - see below.
+ 
+ ![7_77](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/c8412ec3-138d-45d4-9555-a660addc6d1a)
+ 
+ I first checked that apache is running on the web server, `sudo systemctl status httpd`
+ 
+Then i disabled SELinux `sudo setenforce 0`
+ 
+Afterwards, I opened following config file sudo vi /etc/sysconfig/selinux and set SELINUX=disabled
+ 
+![7_77](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/4fadaf25-af33-4582-b8b5-7afecdbe7093)
 
-Then i proceeded to  – check permissions to on **/var/www/html** folder and also disable SELinux `sudo setenforce 0`
+Then i  proceeded to  – check permissions to on **/var/www/html** folder 
 
 
 To make this change permanent – open following config file sudo vi /etc/sysconfig/selinux and set SELINUX=disabled  then restarted httpd, and then checked the status of the Apache again
