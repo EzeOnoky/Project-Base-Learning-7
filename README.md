@@ -297,9 +297,9 @@ Script
 sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/apps /var/www
 
 Executed Script
-sudo mount -t nfs -o rw,nosuid 172.31.89.150:/mnt/apps /var/www
+sudo mount -t nfs -o rw,nosuid 172.31.86.229:/mnt/apps /var/www
 ```
-Note: the /var/www is located locally on our web server, while /mnt/apps is located remotely on our NFS. Run `df -h` cmd to confirm the mount was successful.
+Note: the /var/www is located locally on our web server, while /mnt/apps is located remotely on our NFS. From my Web Server, i ran `df -h` cmd to confirm the mount was successful.
 
 ### 4 - I verified that NFS was mounted successfully by running `df -h`. I ensured that the changes will persist on Web Server after reboot:
 
@@ -315,7 +315,7 @@ Script
 `<NFS-Server-Private-IP-Address>:/mnt/apps /var/www nfs defaults 0 0`
 
 Executed Script
-172.31.89.150:/mnt/apps /var/www nfs defaults 0 0
+172.31.86.229:/mnt/apps /var/www nfs defaults 0 0
 ```
 
 ### 5 - I installed  Apache on the Web server
