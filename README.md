@@ -219,6 +219,16 @@ Remember to install some security on mysql DB while on production network, you m
 ### 4. - I granted permission to **webaccess** user on **tooling** database to do anything only from the webservers **subnet cidr**
 
 ```
+SCRIPT
+sudo mysql
+CREATE DATABASE tooling;
+CREATE USER `myuser`@`<Web-Server-Private-IP-Address>` IDENTIFIED BY 'mypass';
+GRANT ALL ON wordpress.* TO 'myuser'@'<Web-Server-Private-IP-Address>';
+FLUSH PRIVILEGES;
+SHOW DATABASES;
+exit
+
+EXECUTED
 sudo mysql
 CREATE DATABASE tooling;
 CREATE USER `webaccess`@`172.31.80.0/20` IDENTIFIED BY 'password';
