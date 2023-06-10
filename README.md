@@ -77,7 +77,7 @@ sudo gdisk /dev/xvdh
 Install lvm2 package
 
 ```
-sudo yum install lvm2
+sudo yum install lvm2 -y
 sudo lvmdiskscan
 ```
 
@@ -158,7 +158,7 @@ Restart the NFS Server
 sudo systemctl restart nfs-server.service
 ```
 
-I Configured access to NFS for clients within the same subnet (example of Subnet CIDR – 172.31.32.0/20 ):
+I Configured access to NFS for clients within the same subnet (example of Subnet CIDR – 172.31.80.0/20 ):
 
 ```
 sudo vi /etc/exports
@@ -169,9 +169,9 @@ Script
 /mnt/opt <Subnet-CIDR>(rw,sync,no_all_squash,no_root_squash)
 
 Script modified & Executed
-/mnt/apps 172.31.16.0/20(rw,sync,no_all_squash,no_root_squash)
-/mnt/logs 172.31.16.0/20(rw,sync,no_all_squash,no_root_squash)
-/mnt/opt 172.31.16.0/20(rw,sync,no_all_squash,no_root_squash)
+/mnt/apps 172.31.80.0/20(rw,sync,no_all_squash,no_root_squash)
+/mnt/logs 172.31.80.0/20(rw,sync,no_all_squash,no_root_squash)
+/mnt/opt 172.31.80.0/20(rw,sync,no_all_squash,no_root_squash)
 
 Esc + :wq!
 ```
