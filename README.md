@@ -326,7 +326,13 @@ Note: ensure you run sudo yum update to install all the dependencies apache need
 ```
 sudo yum update -y
 sudo yum install httpd -y
+sudo systemctl status httpd
+sudo systemctl restart httpd
+sudo systemctl enable httpd
 ```
+After confirmation the the Apache is active and running, i tried loading my web server public IP and got below page. This is a confirmation that our users can access the web server page, but more work is required to fine tune this default apache page.
+
+![7_51](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/43dbb666-2339-40f9-9f18-bbda7097be14)
 
 Confirm that cgi.bin & html file were successfully created on the webserver after the Apache installation
 
@@ -395,8 +401,7 @@ i ensured that the html folder from the repository is deployed to **/var/www/htm
 cd tooling
 ls /var/www/html         confirm the content
 
-Run below while on tooling directory, the target is to copy ALL the content of html(inside the dowloaded repo - tooling) into
-the Apache folder(/var/www/html)...which gave us the default Apache page found in *step 5 , after i installed  Apache on the Web server* above
+Run below while on tooling directory, the target is to copy ALL the content of html(inside the dowloaded repo - tooling) into the Apache folder(/var/www/html)...which gave us the default Apache page found in *step 5 , after i installed  Apache on the Web server* above
 
 sudo cp -R html/* /var/www/html   
 
@@ -411,7 +416,7 @@ I opened the TCP port 80 on the Web Server.
 
 ![7_7](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/00d921c9-9e22-4f18-8eb8-8b8678ff6253)
 
-- **Note 2**: 
+- **Note 2**: THIS WAS AS EXPERIENCED IN PREVIOUS TRIALS
 I tried launching my web server public IP on my browser, and got error - This site cant be reached - see below.
  
  ![7_77](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/c8412ec3-138d-45d4-9555-a660addc6d1a)
