@@ -357,7 +357,7 @@ Script
 sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/log/httpd
  
  Executed
- sudo mount -t nfs -o rw,nosuid 172.31.89.150:/mnt/logs /var/log/httpd
+ sudo mount -t nfs -o rw,nosuid 172.31.86.229:/mnt/logs /var/log/httpd
  
 sudo ls /var/logs/httpd   
  
@@ -365,8 +365,12 @@ I confirmed the mounting was successful by running `df -h`
  
 I updated the fstab with below line
 
+SCRIPT
+<NFS-Server-Private-IP-Address>:/mnt/apps /var/www nfs defaults 0 0
+
+EXECUTED
 sudo vi /etc/fstab
-172.31.23.140:/mnt/logs /var/log/httpd nfs defaults 0 0
+172.31.86.229:/mnt/logs /var/log/httpd nfs defaults 0 0
 ```
 
 ### 8 - I forked the tooling source code 
