@@ -235,8 +235,9 @@ CREATE USER `webaccess`@`172.31.80.0/20` IDENTIFIED BY 'password';
 GRANT ALL ON tooling.* TO 'webaccess'@'172.31.80.0/20';
 FLUSH PRIVILEGES;
 SHOW DATABASES;
-use webaccess;   - there is no table yet here
-use mysql;       - try accessing an existing database
+use tooling;   - try accessing the new tooling DB
+show tables;    - u will see an empty table
+use mysql;       - try accessing an existing database - mysql
 show tables;
 describe table proxies_priv;
 select 'partition', 'possible_keys', 'key' from proxies_priv
