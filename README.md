@@ -463,12 +463,19 @@ I Applied tooling-db.sql script to my database using this command `mysql -h <dat
 
 I first installed mysql then proceeded to apply the tooling script.
 
+NOTE : This is script is for installation of MySQL version 8 on a Linux 9 server. You can check you Linux Version using  `hostnamectl`
+
 ```
-cd tooling
-sudo yum install mysql -y                                                                                                                                                 
+sudo yum update
+sudo yum install mysql-server -y   OR  sudo dnf install mysql-server -y
+sudo systemctl start mysqld.service
+sudo systemctl enable mysqld
+sudo systemctl status mysqld 
+
 mysql -h <databse-server-private-ip> -u <db-username> -p <db-pasword> < tooling-db.sql
 
-Executed Script
+Executed Script - ensure you are in tooling directory 1st
+cd tooling
 mysql -h 172.31.91.150 -u webaccess -p tooling < tooling-db.sql
 ```
 Above script described  =>  i want to connect to mysql on the DB - 172.31.91.150, using user -u : webaccess , using password -p as my authentication, i want to connect directly to the tooling DB we have created on the DB Server, once connected, i want to run this sql file - tooling-db.sql, which has already been created. 
