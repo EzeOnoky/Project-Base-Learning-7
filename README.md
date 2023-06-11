@@ -403,7 +403,7 @@ ls /var/www/html         confirm the content
 
 Run below while on tooling directory, the target is to copy ALL the content of html(inside the dowloaded repo - tooling) into the Apache folder(/var/www/html)...which gave us the default Apache page found in *step 5 , after i installed  Apache on the Web server* above
 
-sudo cp -R html/* /var/www/html   
+sudo cp -R html/. /var/www/html   
 
 confirm the copying was successful, same content should be on below paths - run below while on tooling directory
 
