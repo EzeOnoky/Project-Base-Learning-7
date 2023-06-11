@@ -423,14 +423,16 @@ I tried launching my web server public IP on my browser, and got error - This si
  
  I first checked that apache is running on the web server, `sudo systemctl status httpd`
  
-Then i disabled SELinux `sudo setenforce 0`
+If Apache is marked as Active: Inactive(dead), follow below step to attempt to make it active,
+Check permissions to your /var/www/html folder and also disable SELinux sudo setenforce 0
  
-Afterwards, I opened following config file sudo vi /etc/sysconfig/selinux and set SELINUX=disabled
+Below commands seeks to disabled SELinux `sudo setenforce 0`, then to make this change permanent – open following config file sudo vi /etc/sysconfig/selinux and set SELINUX=disabled, afterwards, restart httpd(Apache).
 
 ```
-cd ..
 sudo systemctl status httpd
-sudo vi /etc/sysconfig/selinux
+cd ..
+sudo setenforce 0
+sudo vi /etc/sysconfig/selinux        => set SELINUX=enforcing to SELINUX=disabled
 sudo systemctl start httpd
 sudo systemctl status httpd
 ```
@@ -440,7 +442,7 @@ NB - Always minimize the running a restart command in a production network - `su
 ![7_9](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/d4a016f5-a2d2-4bec-9be0-c1911e4b7d9c)
 
  
-I reloaded the web server public IP and now got below - this confirms users on the web can send a request to my web server and get below test page displayed.
+After implementing above, I reloaded the web server public IP and now got below - this confirms users on the web can send a request to my web server and get below test page displayed.
 
 ![7_10](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/0fd02ae7-bac9-4d9a-b224-f0ebc012e620)
 
@@ -471,7 +473,7 @@ mysql -h 172.31.91.150 -u webaccess -p tooling < tooling-db.sql
 ```
 Above script described  =>  i want to connect to mysql on the DB - 172.31.91.150, using user -u : webaccess , using password -p as my authentication, i want to connect directly to the tooling DB we have created on the DB Server, once connected, i want to run this sql file - tooling-db.sql, which has already been created. 
 
-NB, the tooling password captured above is not the real password, I got a propmt to input the correct password for the webaccess user already cretaed on the DB.
+NB, the tooling password captured above is not the real password, I got a prompt to input the correct password for the webaccess user already cretaed on the DB. Incaes the password prompt is not recieved when above command is ran on the Web server, ensure that MYSQL is running on the DB, and also the binding address has been set to 0.0.0.0
 
 Now I returned to my DATABASE SERVER and ran below commands
 
@@ -484,19 +486,31 @@ select * from users;  => This shows the table that has been created using sql fi
 ```
 On mysql table on the DB Server, the user displyed, afer checking `select * from users;` is same as the user diplayed when i run `sudo vi tooling-db.sql` from my web server
 
-Try to  the reload the Web Server test page which was displayed after APache was install, if you get error - `Failed to connect to MySQL:Connectin refused` , this means there is connectivity, but MySQL is refusing the connection. To troubleshoot this, 1st check if MYSQL is running,  `systemctl status mysql`    Next confirm if the require port numbers have been opened on your MYSQL server - try both  `telnet  localhost 3306`   & `telnet  localhost 33045`  and see the outputs, next is to check the inbound rule on the DB Server. I also ensured the binding address is set to 0.0.0.0
+I tried to  the reload the Web Server test page which was displayed after APache was install, and got same test page  display as the previous. While on my tooling directory, I located the test page using below ....
+
+`ls /etc/httpd/conf.d/welcome.conf`
+
+The content displayed when below is run is the same as what shows on the web server test page
+`sudo vi /etc/httpd/conf.d/welcome.conf`
+
+So I proceeded to rename the welcome page
+
+`sudo mv /etc/httpd/conf.d/welcome.conf /etc/httpd/conf.d/welcome.backup`
+
+Then i restarted the Apache
+
+```
+sudo systemctl restart httpd
+sudo systemctl status httpd
+```
+
+Now attempt reloading the web server test page, if you get error - `Failed to connect to MySQL:Connection refused` , this means there is connectivity, but MySQL is refusing the connection. To troubleshoot this, 1st check if MYSQL is running,  `systemctl status mysql`    Next confirm if the require port numbers have been opened on your MYSQL server - try both  `telnet  localhost 3306`   & `telnet  localhost 33045`  and see the outputs, next is to check the inbound rule on the DB Server. I also ensured the binding address is set to 0.0.0.0
 
 I reloaded the test web page again using the web server Public IP, and made log on attempt using the default username and password(admin/admin).
 
 Now on the web server, i located the test web page currently displayed to my end users and renamed it
 
-```
-ls /etc/httpd/conf.d/welcome.conf
-sudo vi /etc/httpd/conf.d/welcome.conf
-sudo mv /etc/httpd/conf.d/welcome.conf /etc/httpd/conf.d/welcome.backup
-sudo systemctl restart httpd
-sudo systemctl status httpd
-```
+
 Below is the tooling website i seek to create, but i now have to install some PHP dependencies which will present the tooling wesite is the correct web page for my end users. These PHP dependencies are installed on the web server.
 
 ![7_14](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/40330c5f-5507-4d85-bf37-abd9432f2df5)
