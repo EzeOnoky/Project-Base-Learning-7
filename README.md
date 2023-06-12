@@ -482,6 +482,10 @@ Above script described  =>  i want to connect to mysql on the DB - 172.31.91.150
 
 NB, the tooling password captured above is not the real password, I got a prompt to input the correct password for the webaccess user already cretaed on the DB. Incaes the password prompt is not recieved when above command is ran on the Web server, ensure that MYSQL is running on the DB, and also the binding address has been set to 0.0.0.0
 
+Also check the security inbound rules on the DB server, if ALL is OK, once you enter the correct password, you will see below marked green
+
+![7_133](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/3fd65b92-e036-4ccc-bb13-eaf619a7061f)
+
 Now I returned to my DATABASE SERVER and ran below commands
 
 ```
