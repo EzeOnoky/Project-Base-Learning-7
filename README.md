@@ -479,7 +479,7 @@ sudo vi /var/www/html/functions.php
 We have created the Data Base, We have created the users, but we  have not created the table that will hold the data inputted to the DB. To achieve this...
 I Applied tooling-db.sql script to my database using this command `mysql -h <databse-private-ip> -u <db-username> -p <db-pasword> < tooling-db.sql`
 
-I first installed mysql then proceeded to apply the tooling script.
+I first installed mysql on the web server which is running on Linux: Red Hat Enterprise Linux 8, then proceeded to apply the tooling script.
 
 NOTE : This is script is for installation of MySQL version 8 on a Linux 9 server. You can check you Linux Version using  `hostnamectl`
 
@@ -496,7 +496,7 @@ Executed Script - ensure you are in tooling directory 1st
 cd tooling
 mysql -h 172.31.91.150 -u webaccess -p tooling < tooling-db.sql
 ```
-Above script described  =>  i want to connect to mysql on the DB - 172.31.91.150, using user -u : webaccess , using password -p as my authentication, i want to connect directly to the tooling DB we have created on the DB Server, once connected, i want to run this sql file - tooling-db.sql, which has already been created. 
+Above script described  =>  i want to connect to mysql on the DB - 172.31.91.150, using user -u : webaccess , using password -p as my authentication, i want to connect directly to the tooling DB we have created on the DB Server, once connected, i want to run this sql file - tooling-db.sql, which has already been created and was part of the files downloaded on our toolin repo. 
 
 NB, the tooling password captured above is not the real password, I got a prompt to input the correct password for the webaccess user already cretaed on the DB. Incaes the password prompt is not recieved when above command is ran on the Web server, ensure that MYSQL is running on the DB, and also the binding address has been set to 0.0.0.0
 
@@ -509,7 +509,7 @@ Now I returned to my DATABASE SERVER and ran below commands
 ```
 sudo mysql
 show databases;
-use tooling;       => connecs you DIRECTLY to the tooling DB
+use tooling;       => connects you DIRECTLY to the tooling DB
 show tables;       => This will now have users 
 select * from users;  => This shows the table that has been created using sql file - tooling-db.sql while i was conected to the web sever
 ```
