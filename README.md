@@ -464,13 +464,6 @@ On reloading the web server page, below was diplayed...
 NB - 
 Always minimize the running a restart command in a production network - `sudo systemctl restart apache2` subcriber use of services are impacted, rather use reload .... `sudo systemctl reload apache2`
 
-![7_9](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/d4a016f5-a2d2-4bec-9be0-c1911e4b7d9c)
-
- 
-After implementing above, I reloaded the web server public IP and now got below - this confirms users on the web can send a request to my web server and get below test page displayed.
-
-![7_10](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/0fd02ae7-bac9-4d9a-b224-f0ebc012e620)
-
 ### 9 I Updated the website’s configuration to connect to the database
 
 So basically, we seek to make the web server successfully connect the DB server which we have already setup
