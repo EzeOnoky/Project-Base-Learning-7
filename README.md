@@ -451,15 +451,18 @@ tree l6 ls /etc/httpd
 ![7_78](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/542c1970-9c2b-4727-9f23-479a7514e694)
 
 
+After these changes, Apache was reloaded...
+```
+sudo systemctl reload httpd
+sudo systemctl status httpd
+```
 
- I first checked that apache is running on the web server, `sudo systemctl status httpd`
- 
-If Apache is marked as Active: Inactive(dead), follow below step to attempt to make it active,
-Check permissions to your /var/www/html folder and also disable SELinux sudo setenforce 0
- 
+On reloading the web server page, below was diplayed...
 
+![7_79](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/fa48a2df-b869-46ce-beef-f766797aa55a) 
 
-NB - Always minimize the running a restart command in a production network - `sudo systemctl restart apache2` subcriber use of services are impacted, rather use reload .... `sudo systemctl reload apache2`
+NB - 
+Always minimize the running a restart command in a production network - `sudo systemctl restart apache2` subcriber use of services are impacted, rather use reload .... `sudo systemctl reload apache2`
 
 ![7_9](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/d4a016f5-a2d2-4bec-9be0-c1911e4b7d9c)
 
