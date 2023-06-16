@@ -416,16 +416,9 @@ I opened the TCP port 80 on the Web Server.
 
 ![7_7](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/00d921c9-9e22-4f18-8eb8-8b8678ff6253)
 
-- **Note 2**: THIS WAS AS EXPERIENCED IN PREVIOUS TRIALS
-I tried launching my web server public IP on my browser, and got error - This site cant be reached - see below.
- 
- ![7_77](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/c8412ec3-138d-45d4-9555-a660addc6d1a)
- 
- I first checked that apache is running on the web server, `sudo systemctl status httpd`
- 
-If Apache is marked as Active: Inactive(dead), follow below step to attempt to make it active,
-Check permissions to your /var/www/html folder and also disable SELinux sudo setenforce 0
- 
+- **Note 2**: 
+I tried launching my web server public IP on my browser, I still got same default page populated, below was done to change the default Apache page
+
 Below commands seeks to disabled SELinux `sudo setenforce 0`, then to make this change permanent – open following config file sudo vi /etc/sysconfig/selinux and set SELINUX=disabled, afterwards, restart httpd(Apache).
 
 ```
@@ -436,6 +429,35 @@ sudo vi /etc/sysconfig/selinux        => set SELINUX=enforcing to SELINUX=disabl
 sudo systemctl start httpd
 sudo systemctl status httpd
 ```
+
+By default, the apache page loads with `index.html` , this need to be changed to `index.php` - which is already downloaded on our tooling repo - see below
+
+![7_71](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/c87111c7-5d7b-4585-a533-d3970ba61f73)
+
+`sudo vi /etc/httpd/conf/httpd.conf` and locate below and make the change
+ 
+ ![7_77](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/c8412ec3-138d-45d4-9555-a660addc6d1a)
+
+ Then i proceeded to change `index.html` , to `index.php`
+
+ `sudo vi /etc/httpd/conf/httpd.conf`
+ **NOTE** Considering my version of Linux: Red Hat Enterprise Linux 8, I had to use the tree command(see below) to locate `/etc/httpd/conf/httpd.conf`
+
+```
+sudo yum install tree
+tree l6 ls /etc/httpd
+```
+ 
+![7_78](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/542c1970-9c2b-4727-9f23-479a7514e694)
+
+
+
+ I first checked that apache is running on the web server, `sudo systemctl status httpd`
+ 
+If Apache is marked as Active: Inactive(dead), follow below step to attempt to make it active,
+Check permissions to your /var/www/html folder and also disable SELinux sudo setenforce 0
+ 
+
 
 NB - Always minimize the running a restart command in a production network - `sudo systemctl restart apache2` subcriber use of services are impacted, rather use reload .... `sudo systemctl reload apache2`
 
