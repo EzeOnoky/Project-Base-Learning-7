@@ -435,8 +435,8 @@ By default, the apache page loads with `index.html` , this need to be changed to
 ![7_71](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/c87111c7-5d7b-4585-a533-d3970ba61f73)
 
 `sudo vi /etc/httpd/conf/httpd.conf` and locate below and make the change
- 
- ![7_77](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/c8412ec3-138d-45d4-9555-a660addc6d1a)
+  
+![7_777](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/72d75416-5d6c-409e-860c-6d41c1dac227)
 
  Then i proceeded to change `index.html` , to `index.php`
 
