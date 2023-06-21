@@ -38,9 +38,9 @@ On the example of AWS services understand the difference between Block Storage, 
 - In this project I implemented a solution that consists of following components:
 
 - Infrastructure: AWS
-- Webserver Linux: Red Hat Enterprise Linux 8
+- Webserver Linux: Red Hat Enterprise Linux 9
 - Database Server: Ubuntu 20.04 + MySQL
-- Storage Server: Red Hat Enterprise Linux 8 + NFS Server
+- Storage Server: Red Hat Enterprise Linux 9 + NFS Server
 - Programming Language: PHP
 - Code Repository: [GitHub](https://github.com/darey-io/tooling)
 
