@@ -44,7 +44,7 @@ On the example of AWS services understand the difference between Block Storage, 
 - Programming Language: PHP
 - Code Repository: [GitHub](https://github.com/darey-io/tooling)
 
-- On the diagram above we can see a common pattern where several **stateless Web Servers** share a common database and also access the same files using **Network File Sytem (NFS)** as a shared file storage. Even though the NFS server might be located on a completely separate hardware – for Web Servers it looks like a local file system from where they can serve the same files.
+- On the diagram below we can see a common pattern where several **stateless Web Servers** share a common database and also access the same files using **Network File Sytem (NFS)** as a shared file storage. Even though the NFS server might be located on a completely separate hardware – for Web Servers it looks like a local file system from where they can serve the same files.
 
 This project consists of the following servers:
  - Web server(RHEL)
@@ -57,12 +57,13 @@ It is important to know what storage solution is suitable for what use cases, fo
 
 ## STEP 1 – ***PREPARE NFS SERVER***
 
-### 1. - I Spinned up a new EC2 instance with RHEL Linux 8 Operating System.
-For Rhel 8 server use this ami RHEL-8.6.0_HVM-20220503-x86_64-2-Hourly2-GP2 (ami-035c5dc086849b5de)
+### 1. - I Spinned up a new EC2 instance with RHEL Linux 9 Operating System.
+For Rhel 9 server, i used Rhel 9 server(HVM)
+Note: Below can still be used : ami RHEL-8.6.0_HVM-20220503-x86_64-2-Hourly2-GP2 (ami-035c5dc086849b5de)
 
 ###  2. - Based on my LVM experience from **Project 6**, I Configured 3 LVM on the Server.
 
-1st I want to create a partition on the physical disk - xvdf, xvdh, xvdg, then we switch to logical volume management.
+First, I want to create a partition on the physical disk - xvdf, xvdh, xvdg, then switch to logical volume management.
 
 Use gdisk utility to create a single partition on each of the 3 disks - xvdf, xvdh, xvdg, Install lvm2 package, created physical volume, created a volume group, created logical volume, formated the disk with xfs file system
 
@@ -212,11 +213,11 @@ sudo systemctl enable mysql
 
 Remember to install some security on mysql DB while on production network, you may want to run this... `sudo mysql_secure_installation` but we are not going into this. Also note, you installed mysql, not mysqld.
 
-### 2. - I created a database and named it **tooling**
+### 2. - I created a database and named it `tooling`
 
-### 3. - I created a database user and named it **webaccess**
+### 3. - I created a database user and named it `webaccess`
 
-### 4. - I granted permission to **webaccess** user on **tooling** database to do anything only from the webservers **subnet cidr**
+### 4. - I granted permission to `webaccess` user on `tooling` database to do anything only from the webservers subnet cidr
 
 ```
 SCRIPT
