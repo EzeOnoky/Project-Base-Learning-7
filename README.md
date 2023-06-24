@@ -282,7 +282,7 @@ During the next steps I did the following:
 
  - Configured the Web Servers to work with a single MySQL database
 
-### 1 . - I launched a new EC2 instance with RHEL 8 Operating System
+### 1 . - I launched a new EC2 instance with RHEL 9 Operating System
 
 ### 2. - I installed NFS client using below command
 Note - without this installation, i will not be able to access the NFS Server from the web server
@@ -300,7 +300,7 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/apps /var/ww
 Executed Script
 sudo mount -t nfs -o rw,nosuid 172.31.86.229:/mnt/apps /var/www
 ```
-Note: the /var/www is located locally on our web server, while /mnt/apps is located remotely on our NFS. From my Web Server, i ran `df -h` cmd to confirm the mount was successful.
+Note: the /var/www is located locally on our web server, while /mnt/apps is located remotely on our NFS. So we target to connect our `/var/www` directory on our webserver with the `/mnt/apps` on NFS server. This is acheived by mounting the NFS server directory to the webserver directory  From my Web Server, i ran `df -h` cmd to confirm the mount was successful.
 
 ### 4 - I verified that NFS was mounted successfully by running `df -h`. I ensured that the changes will persist on Web Server after reboot:
 
@@ -318,9 +318,10 @@ Script
 Executed Script
 172.31.86.229:/mnt/apps /var/www nfs defaults 0 0
 ```
+So basically, the above has been done to ensure that our mounts remain intact when the server reboots. This is achieved by configuring the fstab directory.
 
 ### 5 - I installed  Apache on the Web server
-Remi's Repository  [Remi’s repository](http://www.servermom.org/how-to-enable-remi-repo-on-centos-7-6-and-5/2790/). Without the Apache, the web server will not be able to serve content to the web users, Nginx, Apache etc are the popular web servers clients out there.
+Remi's Repository  [Remi’s repository](http://www.servermom.org/how-to-enable-remi-repo-on-centos-7-6-and-5/2790/). Without the Apache, the web server will not be able to serve content to the web users. Note...Nginx, Apache etc are the popular web servers clients out there.
 
 Note: ensure you run sudo yum update to install all the dependencies apache needs for it to run successfully on the web server. Without installation of these dependencies, apache will not start.
 
@@ -331,47 +332,36 @@ sudo systemctl status httpd
 sudo systemctl restart httpd
 sudo systemctl enable httpd
 ```
-After confirmation the the Apache is active and running, i tried loading my web server public IP and got below page. This is a confirmation that our users can access the web server page, but more work is required to fine tune this default apache page.
 
-![7_51](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/43dbb666-2339-40f9-9f18-bbda7097be14)
-
-Confirm that cgi.bin & html file were successfully created on the webserver after the Apache installation
+After Apache installation, I Confirmed that cgi.bin & html file were successfully created on the webserver after the Apache installation, run below from the Web server
 
 `ls /var/www`
 
-You can also confirm cgi.bin & html files exist on the NFS, on the NFS, run below...
+I was also able to confirm cgi.bin & html files exist on the NFS, run below on the NFS...
 
 `ls /mnt/apps`
 
-- **I repeated steps 1-5 for another 2 Web Servers**.
-
-### 6 - I verified that Apache files and directories are available on the Web Server in **/var/www** and also on the NFS server in **/mnt/apps**. 
-
-Seeing the same files – it means NFS is mounted correctly. I created a new file **touch test.txt** from one server and checked if the same file is accessible from other Web Servers.
+We can see that both `/var/www and /mnt/apps` contains same content. This shows that both mount points are connected via NFS. Seeing the same files – it means NFS is mounted correctly. I created a new file **touch test.txt** from one server and checked if the same file is accessible from other Web Servers.
 
 ![7_6](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/ac9e8e97-848b-4a12-83d9-2a2c6315e19d)
 
-### 7 - I located the log folder for Apache on the Web Server and mounted it to NFS server’s export for logs. 
+Next, I located the log folder for Apache on the Web Server and mounted it to NFS server’s export for logs. I aslo made sure the mount point will persist after reboot by updating the FSTAB.
 
-I repeated step **No 4** to make sure the mount point will persist after reboot. Log folder for Apache is in this path /var/log/httpd.
-The httpd folder(log folder for Apache) should be empty, comfirm this using below...
+Log folder for Apache is in this path /var/log/httpd. The httpd folder(log folder for Apache) should be empty, this was comfirm using `ls /var/log and sudo ls /var/log/httpd`
 
 ```
-ls /var/log  
-sudo ls /var/log/httpd
-
 Script
 sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/log/httpd
  
- Executed
- sudo mount -t nfs -o rw,nosuid 172.31.86.229:/mnt/logs /var/log/httpd
+Executed
+sudo mount -t nfs -o rw,nosuid 172.31.86.229:/mnt/logs /var/log/httpd
  
-sudo ls /var/logs/httpd   
+sudo ls /var/logs/httpd
+```
  
-I confirmed the mounting was successful by running `df -h` 
- 
-I updated the fstab with below line
+I confirmed the mounting was successful by running `df -h` , I updated the fstab with below line
 
+```
 SCRIPT
 <NFS-Server-Private-IP-Address>:/mnt/apps /var/www nfs defaults 0 0
 
@@ -380,12 +370,21 @@ sudo vi /etc/fstab
 172.31.86.229:/mnt/logs /var/log/httpd nfs defaults 0 0
 ```
 
-### 8 - I forked the tooling source code 
+After confirmation the the Apache is active and running `sudo systemctl enable httpd` , i tried loading my web server public IP and got below page. This is a confirmation that our users can access the web server page, but more work is required to fine tune this default apache page.
+
+![7_51](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/43dbb666-2339-40f9-9f18-bbda7097be14)
+
+
+- **I repeated steps 1-5 for the other 2 Web Servers**.
+
+### 6 - I forked the tooling source code 
 from [Darey.io Github Account](https://github.com/darey-io/tooling) to my Github account. (Learn how to fork a repo [here](https://www.youtube.com/watch?v=f5grYMXbAV0))
 
-I first ensured git is installed on my web server and also initialized, Then proceeded to run git clone. I also confirmed the download was successfull. Git is a tool used by software Engineers, it allows us to source code management. Considering u a working a team of software engineers. E.g, i can be working on login page mgt, another software Engineer is working on user access creation. There is need for source code mgt in this type of setting. How do we bring the 2 projects toghther to create a working software.
+I first ensured git is installed on my web server and also initialized, Then proceeded to run git clone. I also confirmed the download was successfull. Git is a tool used by software Engineers, it allows us to run source code management. Considering you a working in a team of software engineers. E.g, i can be working on login page mgt, another software Engineer is working on user access creation. There is need for source code mgt in this type of setting. How do we bring the 2 projects together to create a working software.
 
- ```
+Below was done to install git
+
+```
 which git
 sudo yum install git -y
 git init
@@ -394,20 +393,22 @@ ls
 which git
 ```
 
-### 9. - I deployed the tooling website’s code to the Webserver. 
+### 7. - I deployed the tooling website’s code to the Webserver. 
 
-i ensured that the html folder from the repository is deployed to **/var/www/html**
+i ensured that the html folder from the tooling repository is deployed to **/var/www/html**
 
 ```
 cd tooling
 ls /var/www/html         confirm the content
+```
 
-Run below while on tooling directory, the target is to copy ALL the content of html(inside the dowloaded repo - tooling) into the Apache folder(/var/www/html)...which gave us the default Apache page found in *step 5 , after i installed  Apache on the Web server* above
+**Run below while on tooling directory** , the target is to copy ALL the content of html(inside the dowloaded repositoty - tooling) into the Apache folder(/var/www/html)...which gave us the default Apache page found in *step 5 , after i installed  Apache on the Web server*
 
-sudo cp -R html/. /var/www/html   
+`sudo cp -R html/. /var/www/html`
 
 confirm the copying was successful, same content should be on below paths - run below while on tooling directory
 
+```
 ls /var/www/html    
 ls html
 ```
@@ -418,9 +419,11 @@ I opened the TCP port 80 on the Web Server.
 ![7_7](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/00d921c9-9e22-4f18-8eb8-8b8678ff6253)
 
 - **Note 2**: 
-I tried launching my web server public IP on my browser, I still got same default page populated, below was done to change the default Apache page
+I tried launching my web server public IP on my browser, I still got same default Apache page populated, below was done to change the default Apache page
 
-Below commands seeks to disabled SELinux `sudo setenforce 0`, then to make this change permanent – open following config file sudo vi /etc/sysconfig/selinux and set SELINUX=disabled, afterwards, restart httpd(Apache).
+Below commands seeks to disabled SELinux `sudo setenforce 0`, then to make this change permanent, i opened following config file `sudo vi /etc/sysconfig/selinux` and then set SELINUX=disabled,  httpd(Apache) restart was done.
+
+**Remember to exit the tooling directory**
 
 ```
 sudo systemctl status httpd
@@ -442,7 +445,7 @@ By default, the apache page loads with `index.html` , this need to be changed to
  Then i proceeded to change `index.html` , to `index.php`
 
  `sudo vi /etc/httpd/conf/httpd.conf`
- **NOTE** Considering my version of Linux: Red Hat Enterprise Linux 8, I had to use the tree command(see below) to locate `/etc/httpd/conf/httpd.conf`
+ **NOTE** Considering my version of Linux: Red Hat Enterprise Linux 9, I had to use the tree command(see below) to locate `/etc/httpd/conf/httpd.conf` and made the required change of `index.html` , to `index.php`
 
 ```
 sudo yum install tree
@@ -458,16 +461,15 @@ sudo systemctl reload httpd
 sudo systemctl status httpd
 ```
 
-On reloading the web server page, below was diplayed...
+On reloading the web server page(with web server public IP), below was displayed...
 
 ![7_79](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/fa48a2df-b869-46ce-beef-f766797aa55a) 
 
-NB - 
-Always minimize the running a restart command in a production network - `sudo systemctl restart apache2` subcriber use of services are impacted, rather use reload .... `sudo systemctl reload apache2`
+**NB** -  Always minimize the running a restart command in a production network - `sudo systemctl restart apache2` subcriber use of services are impacted, rather use reload .... `sudo systemctl reload apache2`
 
-### 9 I Updated the website’s configuration to connect to the database
+### 8 I Updated the website’s configuration to connect to the database
 
-So basically, we seek to make the web server successfully connect the DB server which we have already setup
+So basically, we seek to make the web server successfully connect the DB server which we have already setup, In the `/var/www/html` directory , edit the already written php script to connect to the database server, below CMD was used to achieve this
 
 ```
 sudo vi /var/www/html/functions.php
@@ -475,14 +477,18 @@ sudo vi /var/www/html/functions.php
 
 ![7_11](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/025ddda0-bbb1-41fc-be3f-3573c572916c)
 
+After the modification , we can atttempt to connect to the database server from the web server using this CMD `mysql -h <databse-private-ip> -u <db-username> -p <db-pasword> < tooling-db.sql` 
+
+But firstly, we need to install MYSQL on the web server in other to achieve this connection - see below.
 
 ### 10 Creating A table for the User on my Data Base
-We have created the Data Base, We have created the users, but we  have not created the table that will hold the data inputted to the DB. To achieve this...
+On the Database Server, We have created the Data Base, We have created the users, but we  have not created the table that will hold the data inputted to the DB. To achieve this...
+
 I Applied tooling-db.sql script to my database using this command `mysql -h <databse-private-ip> -u <db-username> -p <db-pasword> < tooling-db.sql`
 
-I first installed mysql on the web server which is running on Linux: Red Hat Enterprise Linux 8, then proceeded to apply the tooling script.
+I first installed mysql on the web server which is running on Linux: Red Hat Enterprise Linux 9, then proceeded to apply the tooling script.
 
-NOTE : This is script is for installation of MySQL version 8 on a Linux 9 server. You can check you Linux Version using  `hostnamectl`
+NOTE : This is script is for installation of MySQL version 8 on a RHEL 9 server. You can check youR Linux Version using  `hostnamectl`
 
 ```
 sudo yum update
@@ -491,15 +497,16 @@ sudo systemctl start mysqld.service
 sudo systemctl enable mysqld
 sudo systemctl status mysqld 
 
+Script
 mysql -h <databse-server-private-ip> -u <db-username> -p <db-pasword> < tooling-db.sql
 
-Executed Script - ensure you are in tooling directory 1st
+Executed Script - ENSURE YOU ARE ON TOOLING DIRECTORY
 cd tooling
 mysql -h 172.31.91.150 -u webaccess -p tooling < tooling-db.sql
 ```
-Above script described  =>  i want to connect to mysql on the DB - 172.31.91.150, using user -u : webaccess , using password -p as my authentication, i want to connect directly to the tooling DB we have created on the DB Server, once connected, i want to run this sql file - tooling-db.sql, which has already been created and was part of the files downloaded on our toolin repo. 
+**Above script described**  => From my web server, I want to connect to mysql on the DB - 172.31.91.150, using user -u : webaccess , using password -p as my authentication, i want to connect directly to the tooling DB we have created on the DB Server, once connected, i want to run this sql file - tooling-db.sql, which has already been created and was part of the files downloaded on our tooling repo. 
 
-NB, the tooling password captured above is not the real password, I got a prompt to input the correct password for the webaccess user already cretaed on the DB. Incaes the password prompt is not recieved when above command is ran on the Web server, ensure that MYSQL is running on the DB, and also the binding address has been set to 0.0.0.0
+**NOTE** , the tooling password captured above is not the real password, I got a prompt to input the correct password for the webaccess user already cretaed on the DB. Incaes the password prompt is not recieved when above command is ran on the Web server, ensure that MYSQL is running on the DB, and also the binding address has been set to 0.0.0.0
 
 Also check the security inbound rules on the DB server, if ALL is OK, once you enter the correct password, you will see below marked green
 
@@ -514,9 +521,28 @@ use tooling;       => connects you DIRECTLY to the tooling DB
 show tables;       => This will now have users 
 select * from users;  => This shows the table that has been created using sql file - tooling-db.sql while i was conected to the web sever
 ```
-On mysql table on the DB Server, the user displyed, afer checking `select * from users;` is same as the user diplayed when i run `sudo vi tooling-db.sql` from my web server
+On mysql table on the DB Server, afer checking `select * from users;` the user displyed is same as the user diplayed when i run `sudo vi tooling-db.sql` from my web server.
 
-I tried to  the reload the Web Server test page which was displayed after APache was install, and got same test page  display as the previous. While on my tooling directory, I located the test page using below ....
+### 10 Create in MySQL a new admin user with username : myuser and password: password
+
+Now i proceeded to Simulate a sign up process by adding user credentials manually to the database, on the Data Base Server, below was executed...
+
+`INSERT INTO ‘users’ (‘id’, ‘username’, ‘password’, ’email’, ‘user_type’, ‘status’) VALUES
+-> (1, ‘myuser’, ‘5f4dcc3b5aa765d61d8327deb882cf99’, ‘user@mail.com’, ‘admin’, ‘1’);`
+
+![7_134](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/959c1f4c-7ce4-4e40-a7d5-00e1c3d1a2d5)
+
+
+I made a log on attempt, and I was able to log in with the admin user from my tooling script above - user - admin, password - admin
+
+# Congratulations! I was able to implemented a web solution for a DevOps team using LAMP stack with remote Database and NFS servers
+
+
+
+# ASIDE INFO....
+# Below is applicable when RHEL 8 is used
+
+I tried to  the reload the Web Server test page which was displayed after Apache was install, and got same test page  display as the previous. While on my tooling directory, I located the test page using below ....
 
 `ls /etc/httpd/conf.d/welcome.conf`
 
@@ -565,9 +591,7 @@ Always ensure you restart Apache after making above changes, else the webpage wi
 sudo systemctl restart httpd
 ```
 
-I was able to log in with the admin user from my tooling script above - user - admin, password - admin
 
-# Congratulations! I was able to implemented a web solution for a DevOps team using LAMP stack with remote Database and NFS servers
 
 
                                                                                
