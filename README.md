@@ -481,7 +481,7 @@ After the modification , we can atttempt to connect to the database server from 
 
 But firstly, we need to install MYSQL on the web server in other to achieve this connection - see below.
 
-### 10 Creating A table for the User on my Data Base
+### 11 Creating A table for the User on my Data Base
 On the Database Server, We have created the Data Base, We have created the users, but we  have not created the table that will hold the data inputted to the DB. To achieve this...
 
 I Applied tooling-db.sql script to my database using this command `mysql -h <databse-private-ip> -u <db-username> -p <db-pasword> < tooling-db.sql`
