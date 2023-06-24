@@ -268,7 +268,7 @@ sudo systemctl status mysql
 ## Step 3 — ***PREPARE THE WEB SERVER***
 
 - I ensured that the Web Servers can serve the same content from shared storage solutions, in this case – NFS Server and MySQL database.
-Knowing that one DB can be accessed for **reads** and **writes** by multiple clients. For storing shared files that the Web Servers will use – I utilized NFS and mount previously created Logical Volume **lv-apps** to the folder where Apache stores files to be served to the users **(/var/www)**.
+Knowing that one DB can be accessed for **reads** and **writes** by multiple clients. For storing shared files that the Web Servers will use – I utilized NFS and mounted previously created Logical Volume **lv-apps** to the folder where Apache stores files to be served to the users i.e the **(/var/www)** folder.
 
 - This approach will make the Web Servers **stateless**, which means I will be able to add new ones or remove them whenever I need, and the integrity of the data (in the database and on NFS) will be preserved.
 
