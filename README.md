@@ -329,9 +329,9 @@ Note: ensure you run sudo yum update to install all the dependencies apache need
 ```
 sudo yum update -y
 sudo yum install httpd -y
-sudo systemctl status httpd
 sudo systemctl restart httpd
 sudo systemctl enable httpd
+sudo systemctl status httpd
 ```
 
 After Apache installation, I Confirmed that cgi.bin & html file were successfully created on the webserver after the Apache installation, run below from the Web server
