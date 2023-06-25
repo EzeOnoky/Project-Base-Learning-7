@@ -400,7 +400,6 @@ i ensured that the html folder from the tooling repository is deployed to **/var
 
 ```
 cd tooling
-ls /var/www/html         confirm the content
 ```
 
 **Run below while on tooling directory** , the target is to copy ALL the content of html(inside the dowloaded repositoty - tooling) into the Apache folder(/var/www/html)...which gave us the default Apache page found in *step 5 , after i installed  Apache on the Web server*
