@@ -376,7 +376,9 @@ After confirmation the the Apache is active and running `sudo systemctl enable h
 ![7_51](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/43dbb666-2339-40f9-9f18-bbda7097be14)
 
 
-- **I repeated steps 1-5 for the other 2 Web Servers**.
+**I repeated steps 1-5 for the other 2 Web Servers**
+
+**NOTE - BCOS the mount points on the webservers are connected via NFS, any activity from step 6 below will auto run on ALL the web servers**
 
 ### 6 - I forked the tooling source code 
 from [Darey.io Github Account](https://github.com/darey-io/tooling) to my Github account. (Learn how to fork a repo [here](https://www.youtube.com/watch?v=f5grYMXbAV0))
@@ -494,12 +496,27 @@ sudo yum update
 sudo yum install mysql-server -y   OR  sudo dnf install mysql-server -y
 sudo systemctl start mysqld.service
 sudo systemctl enable mysqld
-sudo systemctl status mysqld 
+sudo systemctl status mysqld
+```
 
+Below can also be used
+
+```
+sudo yum update
+sudo dnf install mysql-server -y
+sudo systemctl start mysqld.service
+sudo systemctl enable mysqld
+sudo systemctl status mysqld
+```
+
+Now that mysql has been installed on the web server, i will proceed to Apply tooling-db.sql script to my database
+
+```
 Script
 mysql -h <databse-server-private-ip> -u <db-username> -p <db-pasword> < tooling-db.sql
 
 Executed Script - ENSURE YOU ARE ON TOOLING DIRECTORY
+
 cd tooling
 mysql -h 172.31.91.150 -u webaccess -p tooling < tooling-db.sql
 ```
