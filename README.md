@@ -439,21 +439,21 @@ By default, the apache page loads with `index.html` , this need to be changed to
 
 ![7_71](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/c87111c7-5d7b-4585-a533-d3970ba61f73)
 
-`sudo vi /etc/httpd/conf/httpd.conf` and locate below and make the change
+`sudo vi /etc/httpd/conf/httpd.conf` 
 
- Then i proceeded to change `index.html` , to `index.php`
+Run above, scroll down to the populate setting configurations, and locate below and make the change on the IF Module
 
- `sudo vi /etc/httpd/conf/httpd.conf`
- **NOTE** Considering my version of Linux: Red Hat Enterprise Linux 9, I had to use the tree command(see below) to locate `/etc/httpd/conf/httpd.conf` and made the required change of `index.html` , to `index.php`
+![7_78](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/542c1970-9c2b-4727-9f23-479a7514e694)
+
+ ... i proceeded to change from `index.html` , to `index.php`
+
+ **NOTE** Considering my version of Linux: Red Hat Enterprise Linux 9, I had to use the tree command(see below) to locate `/etc/httpd/conf/httpd.conf` and make the required change of `index.html` , to `index.php`. You may need to do some search to locate the actuall folder where this change will happen. Below tree command came in handy in locating the folder where change was made....
 
 ```
 sudo yum install tree
 tree l6 ls /etc/httpd
 ```
  
-![7_78](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/542c1970-9c2b-4727-9f23-479a7514e694)
-
-
 After these changes, Apache was reloaded...
 ```
 sudo systemctl reload httpd
