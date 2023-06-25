@@ -209,6 +209,7 @@ sudo yum update
 sudo yum install mysql-server -y
 sudo systemctl restart mysql
 sudo systemctl enable mysql
+sudo systemctl status mysql
 ```
 
 Remember to install some security on mysql DB while on production network, you may want to run this... `sudo mysql_secure_installation` but we are not going into this. Also note, you installed mysql, not mysqld.
