@@ -204,6 +204,7 @@ sudo apt update
 sudo apt install mysql-server -y
 sudo systemctl restart mysql
 sudo systemctl enable mysql
+sudo systemctl status mysql
 ```
 
 USED for installing MYSQL on a RedHart OS, Always run YUM update 1st
