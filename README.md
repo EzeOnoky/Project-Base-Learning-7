@@ -144,18 +144,21 @@ To check the ***subnet cidr*** – I opened my EC2 details in AWS web console an
 
 - I made sure I set up permission that will allow the Web servers to read, write and execute files on NFS:
 
-```
 Change ownership of the directory
+
+```
 sudo chown -R nobody: /mnt/apps
 sudo chown -R nobody: /mnt/logs
 sudo chown -R nobody: /mnt/opt
+```
 
-Allow read, write , Execute access on these directories
+Allow read, write , Execute access on these directories, and then Restart the NFS Server
+
+```
 sudo chmod -R 777 /mnt/apps
 sudo chmod -R 777 /mnt/logs
 sudo chmod -R 777 /mnt/opt
 
-Restart the NFS Server
 sudo systemctl restart nfs-server.service
 ```
 
