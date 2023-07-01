@@ -612,6 +612,8 @@ sudo systemctl restart httpd
 ```
 
 
+# CHECKING JENKINS
+
 
 
                                                                                
