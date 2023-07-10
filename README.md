@@ -613,7 +613,7 @@ sudo systemctl restart httpd
 
 
 # CHECKING JENKINS workings2
-# CHECKING JENKINS workings3
+# CHECKING JENKINS workings32
 
 
 
