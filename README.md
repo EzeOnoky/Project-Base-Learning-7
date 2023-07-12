@@ -614,6 +614,7 @@ sudo systemctl restart httpd
 
 # CHECKING JENKINS workings2
 # CHECKING JENKINS workings45
+# check JENKINS PUSH TO NFS OVER SSH
 
 
 
