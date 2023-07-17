@@ -199,6 +199,8 @@ The port used is **2049**
 ### 1. - I installed MySQL server on the Ubuntu OS
 
 USED for installing MYSQL on a Ubuntu OS, Always run APT update 1st
+NOTE - Ubuntu Server 20.04 LTS (HVM), SSD Volume Type was used
+
 ```
 sudo apt update
 sudo apt install mysql-server -y
