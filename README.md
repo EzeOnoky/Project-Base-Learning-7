@@ -189,9 +189,11 @@ I Exported modified file, so that the web servers will be able to access it
 
 - `rpcinfo -p | grep nfs` 
 
-The port used is **2049**
+The port used is **2049** 
 
-![7_4](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/fcf36201-1d1c-4516-9005-6442aaba2b38)
+Also ensure HTTP is opened
+
+![7_4](https://github.com/EzeOnoky/Project-Base-Learning-7/assets/122687798/03fc04db-f470-4c67-ab33-65913ff606c9)
 
 
 ## STEP 2 — ***CONFIGURE THE DATABASE SERVER***
